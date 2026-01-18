@@ -40,45 +40,13 @@ class ProjectCard extends StatelessWidget {
                   // TODO: make wrap cut off and fade out
                   children: [
                     Expanded(
-                      child: ClipRect(
-                        child: Stack(
-                          children: [
-                            // Tags row - single line, can overflow
-                            Row(
-                              children: (project.tags ?? [])
-                                  .map(
-                                    (tag) => Padding(
-                                      padding: EdgeInsets.only(
-                                        right: AppDimens.spacingSmall,
-                                      ),
-                                      child: Chip(label: Text(tag)),
-                                    ),
-                                  )
-                                  .toList(),
-                            ),
-                            // Fade gradient overlay on the right
-                            Positioned(
-                              right: 0,
-                              top: 0,
-                              bottom: 0,
-                              child: IgnorePointer(
-                                child: Container(
-                                  width: 30, // Fade width
-                                  decoration: BoxDecoration(
-                                    gradient: LinearGradient(
-                                      begin: Alignment.centerLeft,
-                                      end: Alignment.centerRight,
-                                      colors: [
-                                        Colors.transparent,
-                                        Theme.of(context).cardColor,
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
+                      child: Wrap(
+                        clipBehavior: Clip.hardEdge,
+                        spacing: AppDimens.spacingSmall,
+                        runSpacing: AppDimens.spacingSmall,
+                        children: (project.tags ?? [])
+                            .map((tag) => Chip(label: Text(tag)))
+                            .toList(),
                       ),
                     ),
                     SizedBox(width: AppDimens.spacingSmall),
@@ -96,6 +64,7 @@ class ProjectCard extends StatelessWidget {
                 // Deadline
                 Align(
                   alignment: Alignment.centerRight,
+                  // TODO: Format date utils
                   child: Text(
                     DateUtils.dateOnly(
                       project.deadline,

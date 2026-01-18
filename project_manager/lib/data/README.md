@@ -31,3 +31,8 @@
 - Card, Chip, Wrap, InkWell.
 - ListView and bounded constraints.
 - How to align text.
+
+## 18/1/2025
+
+- GridView.builder.
+- StatefulWidget.
