@@ -5,17 +5,17 @@ import 'package:project_manager/models/project.dart';
 final List<Project> sampleProjects = [
   Project(
     id: '1',
-    name: 'Project 1',
+    name: 'Conceptual Modelling',
     description: 'Description 1',
     type: 'Type 1',
     status: ProjectStatus.ongoing,
     startDate: '2024-01-01',
     endDate: '2024-01-01',
     progress: 0,
-    weight: '30',
+    weight: '40',
     color: '0',
     deadline: DateTime.now(),
-    tags: ['Tag 1', 'Tag 2'],
+    tags: ['COMP1000', 'Group Project'],
   ),
   // Project(
   //   id: '2',
@@ -33,9 +33,9 @@ final List<Project> sampleProjects = [
   // ),
   Project(
     id: '3',
-    name: 'Project 3',
+    name: 'Standardisation',
     description: 'Description 3',
-    type: 'Type 3',
+    type: '3',
     status: ProjectStatus.completed,
     startDate: '2024-01-01',
     endDate: '2024-01-01',
@@ -43,6 +43,6 @@ final List<Project> sampleProjects = [
     weight: '60',
     color: '0',
     deadline: DateTime.now(),
-    tags: ['Tag 7', 'Tag 8', 'Tag 9'],
+    tags: ['PHIL1037', 'Essay'],
   ),
 ];

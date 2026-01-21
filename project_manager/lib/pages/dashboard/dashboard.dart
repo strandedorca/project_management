@@ -22,7 +22,9 @@ class Dashboard extends StatelessWidget {
             SizedBox(height: AppDimens.spacingMedium),
             Section(body: Deadlines(), title: 'Upcoming Deadlines'),
             SizedBox(height: AppDimens.spacingMedium),
-            Section(body: DueTasks(), title: 'Due Tasks'),
+            Expanded(
+              child: Section(body: DueTasks(), title: 'Due Tasks'),
+            ),
           ],
         ),
       ),

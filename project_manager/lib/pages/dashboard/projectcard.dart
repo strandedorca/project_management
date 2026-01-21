@@ -7,6 +7,7 @@ class ProjectCard extends StatelessWidget {
   final Project project;
   const ProjectCard({super.key, required this.project});
 
+  // TODO: handle overflow (project 2 in the sample data)
   @override
   Widget build(BuildContext context) {
     return Card(
