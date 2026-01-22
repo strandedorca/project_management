@@ -36,7 +36,6 @@ class ProjectCard extends StatelessWidget {
                 // Tags & Weight
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  // TODO: Style Chips
                   // TODO: Style weight
                   // TODO: make wrap cut off and fade out
                   children: [
@@ -46,7 +45,7 @@ class ProjectCard extends StatelessWidget {
                         spacing: AppDimens.spacingSmall,
                         runSpacing: AppDimens.spacingSmall,
                         children: (project.tags ?? [])
-                            .map((tag) => Chip(label: Text(tag)))
+                            .map((tag) => Tag(tag: tag))
                             .toList(),
                       ),
                     ),
@@ -77,6 +76,28 @@ class ProjectCard extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+}
+
+class Tag extends StatelessWidget {
+  final String tag;
+  final double tagVerticalPadding = 2.0;
+  final double tagHorizontalPadding = 10.0;
+  const Tag({super.key, required this.tag});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.symmetric(
+        vertical: tagVerticalPadding,
+        horizontal: tagHorizontalPadding,
+      ),
+      decoration: BoxDecoration(
+        color: Theme.of(context).colorScheme.outlineVariant,
+        borderRadius: BorderRadius.circular(AppDimens.borderRadiusMedium),
+      ),
+      child: Text(tag),
     );
   }
 }

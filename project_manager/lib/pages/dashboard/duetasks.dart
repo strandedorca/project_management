@@ -32,9 +32,11 @@ class DueTasks extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 for (final task in visibleTasks)
-                  DueTaskTile(
-                    task: task,
-                    hasBottomBorder: task != visibleTasks.last,
+                  Expanded(
+                    child: DueTaskTile(
+                      task: task,
+                      hasBottomBorder: task != visibleTasks.last,
+                    ),
                   ),
               ],
             );

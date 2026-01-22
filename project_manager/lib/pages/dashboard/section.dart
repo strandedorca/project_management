@@ -10,12 +10,13 @@ class Section extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        // Title & See All button
-        // TODO: Style title and button
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           // TODO: Add a See All button that navigates to the projects page
-          children: [Text(title), Text('See All')],
+          children: [
+            Text(title, style: Theme.of(context).textTheme.titleLarge),
+            Text('See All'),
+          ],
         ),
         SizedBox(height: AppDimens.spacingMedium),
         body,
