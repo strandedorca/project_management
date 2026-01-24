@@ -1,19 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:project_manager/models/project.dart';
-import 'package:project_manager/pages/dashboard/progress.dart';
+import 'package:project_manager/pages/dashboard/projectprogresscard.dart';
 import 'package:project_manager/themes/dimens.dart';
+import 'package:project_manager/utils/date_formatter.dart';
+import 'package:project_manager/utils/number_formatter.dart';
 
 class ProjectCard extends StatelessWidget {
   final Project project;
   const ProjectCard({super.key, required this.project});
 
-  // TODO: handle overflow (project 2 in the sample data)
   @override
   Widget build(BuildContext context) {
     return Card(
+      margin: EdgeInsets.zero,
       // clipBehavior is necessary to prevent the InkWell from overflowing the Card
       clipBehavior: Clip.hardEdge,
-      // Thick border
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(AppDimens.borderRadiusMedium),
         side: BorderSide(width: AppDimens.borderWidthMedium),
@@ -36,39 +37,56 @@ class ProjectCard extends StatelessWidget {
                 // Tags & Weight
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  // TODO: Style weight
-                  // TODO: make wrap cut off and fade out
                   children: [
                     Expanded(
-                      child: Wrap(
-                        clipBehavior: Clip.hardEdge,
-                        spacing: AppDimens.spacingSmall,
-                        runSpacing: AppDimens.spacingSmall,
-                        children: (project.tags ?? [])
-                            .map((tag) => Tag(tag: tag))
-                            .toList(),
+                      // ShaderMask (& LinearGradient) to fade out the tags that overflow
+                      child: ShaderMask(
+                        // SingleChildScrollView > Row pattern to cut off the tags that overflow
+                        child: SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          physics: NeverScrollableScrollPhysics(),
+                          child: Row(
+                            spacing: AppDimens.spacingSmall,
+                            children: (project.tags ?? [])
+                                .map((tag) => _Tag(tag: tag))
+                                .toList(),
+                          ),
+                        ),
+                        shaderCallback: (rect) => const LinearGradient(
+                          colors: [
+                            Colors.black,
+                            Colors.black,
+                            Colors.transparent,
+                          ],
+                          stops: [
+                            0.0,
+                            0.8, // fade starts at 0.8
+                            0.95, // fade ends at 0.9
+                          ],
+                        ).createShader(rect),
                       ),
                     ),
                     SizedBox(width: AppDimens.spacingSmall),
-                    Text(project.weight),
+                    _SingleRadialChart(percentage: project.weight, size: 30),
                   ],
                 ),
 
                 // Name
                 Text(
                   project.name,
-                  style: Theme.of(context).textTheme.titleMedium,
+                  style: Theme.of(context).textTheme.titleLarge,
+                  overflow: TextOverflow.ellipsis,
                 ),
+
                 // Progress
-                ProgressBar(progress: project.progress),
+                CardProjectProgress(progress: project.progress),
+
                 // Deadline
                 Align(
                   alignment: Alignment.centerRight,
-                  // TODO: Format date utils
                   child: Text(
-                    DateUtils.dateOnly(
-                      project.deadline,
-                    ).toString().split(' ')[0],
+                    DateFormatter.shortDate(project.deadline),
+                    style: Theme.of(context).textTheme.bodySmall,
                   ),
                 ),
               ],
@@ -80,11 +98,11 @@ class ProjectCard extends StatelessWidget {
   }
 }
 
-class Tag extends StatelessWidget {
+class _Tag extends StatelessWidget {
   final String tag;
-  final double tagVerticalPadding = 2.0;
+  final double tagVerticalPadding = 4.0;
   final double tagHorizontalPadding = 10.0;
-  const Tag({super.key, required this.tag});
+  const _Tag({required this.tag});
 
   @override
   Widget build(BuildContext context) {
@@ -97,7 +115,35 @@ class Tag extends StatelessWidget {
         color: Theme.of(context).colorScheme.outlineVariant,
         borderRadius: BorderRadius.circular(AppDimens.borderRadiusMedium),
       ),
-      child: Text(tag),
+      child: Text(tag, style: Theme.of(context).textTheme.labelSmall),
+    );
+  }
+}
+
+class _SingleRadialChart extends StatelessWidget {
+  final double percentage;
+  final double size;
+  const _SingleRadialChart({required this.percentage, required this.size});
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      alignment: Alignment.center,
+      children: [
+        SizedBox(
+          width: size,
+          height: size,
+          child: CircularProgressIndicator(
+            value: percentage / 100,
+            color: Theme.of(context).colorScheme.outline,
+            backgroundColor: Theme.of(context).colorScheme.outlineVariant,
+          ),
+        ),
+        Text(
+          NumberFormatter.wholeNumber(percentage),
+          style: Theme.of(context).textTheme.labelSmall,
+        ),
+      ],
     );
   }
 }

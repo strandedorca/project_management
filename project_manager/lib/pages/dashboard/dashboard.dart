@@ -42,17 +42,17 @@ class _DashboardState extends State<Dashboard> {
     return Scaffold(
       appBar: CustomAppBar(user: _user),
       body: Padding(
-        padding: EdgeInsets.all(AppDimens.paddingMedium),
-        child: Column(
-          children: [
-            Section(body: Projects(), title: 'Ongoing Projects'),
-            SizedBox(height: AppDimens.spacingMedium),
-            Section(body: Deadlines(), title: 'Upcoming Deadlines'),
-            SizedBox(height: AppDimens.spacingMedium),
-            Expanded(
-              child: Section(body: DueTasks(), title: 'Due Tasks'),
-            ),
-          ],
+        padding: EdgeInsets.all(AppDimens.appPadding),
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              Section(body: Projects(), title: 'Ongoing Projects'),
+              SizedBox(height: AppDimens.spacingMedium),
+              Section(body: Deadlines(), title: 'Upcoming Deadlines'),
+              SizedBox(height: AppDimens.spacingMedium),
+              Section(body: DueTasks(), title: 'Due Tasks'),
+            ],
+          ),
         ),
       ),
     );

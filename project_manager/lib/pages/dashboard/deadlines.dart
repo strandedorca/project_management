@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:project_manager/data/sample_upcoming_deadline.dart';
 import 'package:project_manager/models/project.dart';
+import 'package:project_manager/themes/colors.dart';
 import 'package:project_manager/themes/dimens.dart';
+import 'package:project_manager/utils/date_formatter.dart';
 
 // TODO: Real data from the database/API/state management
 class Deadlines extends StatelessWidget {
@@ -20,41 +22,35 @@ class Deadlines extends StatelessWidget {
         ? 4
         : sampleUpcomingDeadlines.length;
 
-    // TODO: no deadlines
-    if (sampleUpcomingDeadlines.isEmpty) {
-      return const SizedBox.shrink();
-    }
-
     return GridView.builder(
       padding: EdgeInsets.zero,
-      shrinkWrap: true, // ✅ Auto-calculate height based on content + spacing
+      shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
       itemCount: itemCount,
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
-        childAspectRatio: 2.5,
-        crossAxisSpacing: AppDimens.spacingSmall,
-        mainAxisSpacing: AppDimens.spacingSmall,
+        childAspectRatio: 2.35,
+        crossAxisSpacing: AppDimens.spacingMedium,
+        mainAxisSpacing: AppDimens.spacingMedium,
       ),
       itemBuilder: (context, index) {
         final project = sampleUpcomingDeadlines[index];
-        return DeadlineCard(project: project);
+        return _DeadlineCard(project: project);
       },
     );
   }
 }
 
-// TODO: Style card
-class DeadlineCard extends StatelessWidget {
+class _DeadlineCard extends StatelessWidget {
   final Project project;
 
-  const DeadlineCard({super.key, required this.project});
+  const _DeadlineCard({required this.project});
 
   @override
   Widget build(BuildContext context) {
     return Card(
+      margin: EdgeInsets.zero,
       clipBehavior: Clip.hardEdge,
-      // Thick border
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(AppDimens.borderRadiusSmall),
         side: BorderSide(width: AppDimens.borderWidthMedium),
@@ -65,16 +61,28 @@ class DeadlineCard extends StatelessWidget {
           print('Project ${project.name} tapped');
         },
         child: Padding(
-          padding: EdgeInsets.all(AppDimens.paddingMedium),
+          padding: EdgeInsets.all(16),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Expanded(
-                child: Text(project.name, overflow: TextOverflow.ellipsis),
+                child: Text(
+                  project.name,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(fontWeight: FontWeight.w600),
+                  maxLines: 1,
+                ),
               ),
               Expanded(
-                child: Text(
-                  DateUtils.dateOnly(project.deadline).toString().split(' ')[0],
+                child: Align(
+                  alignment: Alignment.bottomLeft,
+                  child: Text(
+                    DateFormatter.shortDate(project.deadline),
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                      color: AppColors.textSecondary,
+                    ),
+                    maxLines: 1,
+                  ),
                 ),
               ),
             ],
@@ -84,19 +92,3 @@ class DeadlineCard extends StatelessWidget {
     );
   }
 }
-
-// TODO: Format deadline date and time utils
-// String _formatDeadline(DateTime deadline) {
-//   final now = DateTime.now();
-//   final difference = deadline.difference(now).inDays;
-
-//   if (difference == 0) {
-//     return 'Today';
-//   } else if (difference == 1) {
-//     return 'Tomorrow';
-//   } else if (difference < 7) {
-//     return '$difference days';
-//   } else {
-//     return '${(difference / 7).floor()} weeks';
-//   }
-// }

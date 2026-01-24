@@ -16,7 +16,7 @@ class AppTheme {
         bodyColor: AppColors.textPrimary,
         displayColor: AppColors.textPrimary,
       ),
-      // useMaterial3: false,
+      useMaterial3: false,
     );
   }
 }

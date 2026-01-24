@@ -234,9 +234,9 @@ Dashboard
 ## Learning Path
 
 ### Week 1: Foundation
-- [ ] Understand data models
+- [x] Understand data models
 - [ ] Set up state management (simple approach)
-- [ ] Create sample data
+- [x] Create sample data
 
 ### Week 2: Projects
 - [ ] Create project form

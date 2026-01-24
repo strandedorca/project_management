@@ -13,10 +13,10 @@ List<Task> sampleDueTasks = [
   ),
   Task(
     id: '2',
-    name: 'Plan workout routine',
+    name: 'Plan workout routine & calorie intake',
     projectId: '2',
     projectName: 'Wellness',
-    dueDate: DateTime(2026, 2, 18),
+    dueDate: DateTime(2026, 1, 14),
     status: TaskStatus.inProgress,
   ),
   Task(
@@ -24,15 +24,24 @@ List<Task> sampleDueTasks = [
     name: 'Create the dopamine menu',
     projectId: '3',
     projectName: 'Productivity',
-    dueDate: DateTime(2026, 1, 21),
+    dueDate: DateTime(2026, 1, 24),
     status: TaskStatus.pending,
   ),
   Task(
     id: '4',
-    name: 'Create the dopamine menu',
+    name:
+        'Create the dopamine menu that is really long and will overflow the container',
     projectId: '3',
-    dueDate: DateTime(2026, 1, 21),
+    dueDate: DateTime(2026, 1, 24),
     projectName: 'Productivity',
+    status: TaskStatus.completed,
+  ),
+  Task(
+    id: '5',
+    name: 'Practice the piano',
+    projectId: '3',
+    projectName: 'Productivity',
+    dueDate: DateTime(2026, 1, 23),
     status: TaskStatus.completed,
   ),
 ];

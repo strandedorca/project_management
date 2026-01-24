@@ -10,15 +10,17 @@ class Project {
   final String? type;
   final ProjectStatus status;
 
-  final String startDate;
-  final String endDate;
+  final DateTime startDate;
+  final DateTime endDate;
 
   final double progress;
-  final String weight;
+  final double weight;
 
   final String color;
 
   final DateTime deadline;
+
+  final DateTime updatedAt;
 
   // Constructor
   const Project({
@@ -34,6 +36,7 @@ class Project {
     required this.weight,
     required this.color,
     required this.deadline,
+    required this.updatedAt,
   });
 
   // int get progressPercentage => int.parse(progress);

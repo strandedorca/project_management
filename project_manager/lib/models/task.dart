@@ -41,7 +41,7 @@ class Task {
     required this.name,
     this.description,
     required this.projectId,
-    required this.projectName,
+    this.projectName = '',
     this.dueDate,
     required this.status,
     // required this.createdAt,
