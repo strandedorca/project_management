@@ -3,7 +3,7 @@ import 'package:project_manager/data/repositories/in_memory_project_repository.d
 import 'package:project_manager/data/repositories/in_memory_task_repository.dart';
 import 'package:project_manager/data/services/project_service.dart';
 import 'package:project_manager/data/services/task_service.dart';
-import 'package:project_manager/pages/dashboard/dashboard.dart';
+import 'package:project_manager/pages/create_project/projectcreation.dart';
 import 'package:project_manager/themes/app_theme.dart';
 
 // Global instances - shared across the app
@@ -27,7 +27,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Project Manager',
-      home: const Dashboard(title: 'Dashboard'),
+      home: const ProjectCreationScreen(),
       theme: AppTheme.lightTheme,
       // TODO: Add dark theme & theme mode
     );

@@ -36,4 +36,18 @@ class AppDecorations {
       borderRadius: BorderRadius.circular(AppDimens.borderRadiusSmall),
     );
   }
+
+  // Round icon frame decoration
+  static BoxDecoration roundIconFrame(BuildContext context) {
+    final colors = Theme.of(context).colorScheme;
+
+    return BoxDecoration(
+      color: colors.primaryContainer,
+      borderRadius: BorderRadius.circular(999),
+      border: Border.all(
+        color: colors.outline,
+        width: AppDimens.borderWidthMedium,
+      ),
+    );
+  }
 }

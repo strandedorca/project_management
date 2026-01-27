@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:project_manager/models/user.dart';
-import 'package:project_manager/pages/dashboard/appbar.dart';
+import 'package:project_manager/pages/dashboard/dashboardAppbar.dart';
 import 'package:project_manager/pages/dashboard/deadlines.dart';
 import 'package:project_manager/pages/dashboard/duetasks.dart';
 import 'package:project_manager/pages/dashboard/projects.dart';
@@ -40,7 +40,7 @@ class _DashboardState extends State<Dashboard> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(user: _user),
+      appBar: DashboardAppbar(user: _user),
       body: Padding(
         padding: EdgeInsets.all(AppDimens.appPadding),
         child: SingleChildScrollView(
