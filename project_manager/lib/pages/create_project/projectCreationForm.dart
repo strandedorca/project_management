@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:project_manager/components/tags_input_field.dart';
+import 'package:project_manager/models/category.dart';
 import 'package:project_manager/pages/create_project/projectCreationFormField.dart';
 import 'package:project_manager/themes/decorations.dart';
 import 'package:project_manager/themes/dimens.dart';
@@ -20,10 +20,62 @@ class _ProjectCreationFormState extends State<ProjectCreationForm> {
   final _descriptionController = TextEditingController();
   final _categoryController = TextEditingController();
   final _deadlineController = TextEditingController();
+  final _tagsController = TextEditingController();
 
-  String _selectedCategory = 'Inbox';
+  List<Category> _categories = [];
+  String? _selectedCategory;
   DateTime? _selectedDate;
+  List<String> _availableTags = [];
   List<String> _selectedTags = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchCategories();
+    _fetchTags();
+  }
+
+  void _fetchCategories() {
+    // Sample categories - TODO: replace with API call
+    // TODO: Add icons to categories
+    final List<Category> categories = [
+      Category(id: '1', name: 'Inbox'), // Default category
+      Category(id: '2', name: 'Work'),
+      Category(id: '3', name: 'Personal'),
+      Category(id: '4', name: 'School'),
+      Category(id: '5', name: 'Health'),
+      Category(id: '6', name: 'Finance'),
+      Category(id: '7', name: 'Travel'),
+      Category(id: '8', name: 'Other'),
+    ];
+    setState(() {
+      _categories = categories;
+      _selectedCategory = 'Inbox';
+    });
+  }
+
+  void _fetchTags() {
+    // Sample tags - TODO: replace with API call
+    final List<String> tags = [
+      'Ambi',
+      'Blender',
+      'Cinema 4D',
+      'Maya',
+      'Substance Painter',
+      'Substance Designer',
+      'Substance Render',
+      'Substance Matte',
+      'Substance Normal',
+      'Substance Displacement',
+      'Substance Height',
+      'Substance Roughness',
+      'Substance Metallic',
+      'Substance Ambient Occlusion',
+    ];
+    setState(() {
+      _availableTags = tags;
+    });
+  }
 
   // Dispose of the controllers when the form is removed from the tree
   @override
@@ -86,23 +138,6 @@ class _ProjectCreationFormState extends State<ProjectCreationForm> {
     print('Deadline cleared: ${_deadlineController.text}');
   }
 
-  // Sample categories
-  final List<String> _categories = [
-    'Inbox', // Default category
-    'Work',
-    'Personal',
-    'School',
-    'Health',
-    'Finance',
-    'Travel',
-    'Other',
-    'Other',
-    'Other',
-    'Other',
-    'Other',
-    'Other',
-  ];
-
   void _showCategoryPicker() {
     showModalBottomSheet(
       context: context,
@@ -130,24 +165,41 @@ class _ProjectCreationFormState extends State<ProjectCreationForm> {
                   child: Column(
                     children: [
                       ..._categories.map(
-                        (category) => ListTile(
-                          leading: Icon(
-                            Icons.folder_outlined,
-                            color: Theme.of(context).colorScheme.outline,
+                        (category) => Container(
+                          color: category.name == _selectedCategory
+                              ? Theme.of(
+                                  context,
+                                ).colorScheme.primary.withValues(alpha: 0.5)
+                              : null,
+                          child: ListTile(
+                            // TODO: Add icons to categories - default to folder_outlined if no icon provided
+                            leading: Icon(
+                              Icons.folder_outlined,
+                              color: Theme.of(context).colorScheme.outline,
+                            ),
+
+                            title: Text(
+                              category.name,
+                              style: Theme.of(context).textTheme.bodyMedium,
+                            ),
+                            trailing: category.name == _selectedCategory
+                                ? Icon(
+                                    Icons.check,
+                                    color: Theme.of(
+                                      context,
+                                    ).colorScheme.outline,
+                                  )
+                                : null,
+                            horizontalTitleGap: AppDimens.spacingMedium,
+                            minLeadingWidth: 0,
+                            onTap: () {
+                              setState(() {
+                                _selectedCategory = category.name;
+                                _categoryController.text = _selectedCategory!;
+                              });
+                              Navigator.pop(context);
+                            },
                           ),
-                          horizontalTitleGap: AppDimens.spacingMedium,
-                          minLeadingWidth: 0,
-                          title: Text(
-                            category,
-                            style: Theme.of(context).textTheme.bodyMedium,
-                          ),
-                          onTap: () {
-                            setState(() {
-                              _selectedCategory = category;
-                              _categoryController.text = _selectedCategory;
-                            });
-                            Navigator.pop(context);
-                          },
                         ),
                       ),
                     ],
@@ -263,15 +315,22 @@ class _ProjectCreationFormState extends State<ProjectCreationForm> {
           ProjectCreationFormField(
             label: 'Tags',
             hasBorder: false,
-            childField: TagsInputField(
-              selectedTags: _selectedTags,
-              onTagsChanged: (tags) {
-                setState(() {
-                  _selectedTags = tags;
-                });
-                print('Tags changed: $tags');
-              },
+            childField: TextFormField(
+              controller: _tagsController,
+              readOnly: true,
+              style: Theme.of(context).textTheme.bodyMedium,
+              cursorColor: Theme.of(context).colorScheme.outline,
+              decoration: AppDecorations.borderlessInputDecoration(context),
             ),
+            // childField: TagsInputField(
+            //   selectedTags: _selectedTags,
+            //   onTagsChanged: (tags) {
+            //     setState(() {
+            //       _selectedTags = tags;
+            //     });
+            //     print('Tags changed: $tags');
+            //   },
+            // ),
           ),
           const SizedBox(height: AppDimens.spacingMedium),
           ProjectCreationFormField(
