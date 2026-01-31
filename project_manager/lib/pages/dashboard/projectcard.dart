@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:project_manager/models/project.dart';
-import 'package:project_manager/pages/dashboard/projectprogresscard.dart';
+import 'package:project_manager/pages/dashboard/projectCardProgress.dart';
 import 'package:project_manager/themes/dimens.dart';
 import 'package:project_manager/utils/date_formatter.dart';
 import 'package:project_manager/utils/number_formatter.dart';

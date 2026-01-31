@@ -27,7 +27,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Project Manager',
-      home: const ProjectCreationScreen(),
+      home: ProjectCreation(),
       theme: AppTheme.lightTheme,
       // TODO: Add dark theme & theme mode
     );

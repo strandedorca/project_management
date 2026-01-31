@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:project_manager/data/sample_data.dart';
-import 'package:project_manager/pages/dashboard/projectcard.dart';
+import 'package:project_manager/pages/dashboard/projectCard.dart';
 import 'package:project_manager/themes/dimens.dart';
 
 class Projects extends StatelessWidget {

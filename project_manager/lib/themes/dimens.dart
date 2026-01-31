@@ -20,4 +20,5 @@ class AppDimens {
 
   // Border Widths
   static const double borderWidthMedium = 1.5;
+  static const double borderWidthLarge = 3.0;
 }

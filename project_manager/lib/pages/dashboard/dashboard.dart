@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:project_manager/models/user.dart';
 import 'package:project_manager/pages/dashboard/dashboardAppbar.dart';
 import 'package:project_manager/pages/dashboard/deadlines.dart';
-import 'package:project_manager/pages/dashboard/duetasks.dart';
+import 'package:project_manager/pages/dashboard/dueTasks.dart';
 import 'package:project_manager/pages/dashboard/projects.dart';
 import 'package:project_manager/pages/dashboard/section.dart';
 import 'package:project_manager/services/user_service.dart';
@@ -39,19 +39,24 @@ class _DashboardState extends State<Dashboard> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: DashboardAppbar(user: _user),
-      body: Padding(
-        padding: EdgeInsets.all(AppDimens.appPadding),
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              Section(body: Projects(), title: 'Ongoing Projects'),
-              SizedBox(height: AppDimens.spacingMedium),
-              Section(body: Deadlines(), title: 'Upcoming Deadlines'),
-              SizedBox(height: AppDimens.spacingMedium),
-              Section(body: DueTasks(), title: 'Due Tasks'),
-            ],
+    return Container(
+      color: Theme.of(context).colorScheme.surface,
+      child: SafeArea(
+        child: Scaffold(
+          appBar: DashboardAppbar(user: _user),
+          body: Padding(
+            padding: EdgeInsets.all(AppDimens.appPadding),
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  Section(body: Projects(), title: 'Ongoing Projects'),
+                  SizedBox(height: AppDimens.spacingMedium),
+                  Section(body: Deadlines(), title: 'Upcoming Deadlines'),
+                  SizedBox(height: AppDimens.spacingMedium),
+                  Section(body: DueTasks(), title: 'Due Tasks'),
+                ],
+              ),
+            ),
           ),
         ),
       ),
