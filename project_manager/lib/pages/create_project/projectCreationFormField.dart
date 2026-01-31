@@ -25,10 +25,13 @@ class ProjectCreationFormField extends StatelessWidget {
         Text(label, style: Theme.of(context).textTheme.titleMedium),
         const SizedBox(height: AppDimens.spacingSmall),
         Container(
-          padding: EdgeInsets.only(
-            right: hasSuffixIcon ? 0 : AppDimens.paddingSmall + 5,
-            left: AppDimens.paddingSmall + 5,
-          ),
+          padding:
+              hasBorder // Border means there is a padding
+              ? EdgeInsets.only(
+                  right: hasSuffixIcon ? 0 : AppDimens.paddingSmall + 5,
+                  left: AppDimens.paddingSmall + 5,
+                )
+              : null,
           decoration: hasBorder
               ? AppDecorations.roundedBorderedBox(
                   context,

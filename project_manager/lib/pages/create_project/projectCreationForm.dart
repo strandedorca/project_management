@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:project_manager/components/modalBottomSheet.dart';
 import 'package:project_manager/models/category.dart';
 import 'package:project_manager/pages/create_project/projectCreationFormField.dart';
 import 'package:project_manager/themes/decorations.dart';
@@ -139,79 +140,91 @@ class _ProjectCreationFormState extends State<ProjectCreationForm> {
   }
 
   void _showCategoryPicker() {
-    showModalBottomSheet(
-      context: context,
-      backgroundColor: Theme.of(context).colorScheme.primary,
-      shape: AppDecorations.roundedBorderedRectangleBorder(
-        context,
-        AppDimens.borderRadiusMedium,
+    PickerSheet.show(
+      context,
+      'Select Category',
+      // TODO: make this reusable for other pickers (tags for example)
+      ListView.builder(
+        itemCount: _categories.length,
+        itemBuilder: (context, index) => Container(
+          color: _categories[index].name == _selectedCategory
+              ? Theme.of(context).colorScheme.primary.withValues(alpha: 0.5)
+              : null,
+          child: ListTile(
+            // TODO: Add icons to categories - default to folder_outlined if no icon provided
+            leading: Icon(
+              Icons.folder_outlined,
+              color: Theme.of(context).colorScheme.outline,
+            ),
+            title: Text(
+              _categories[index].name,
+              style: Theme.of(context).textTheme.bodyMedium,
+            ),
+            trailing: _categories[index].name == _selectedCategory
+                ? Icon(
+                    Icons.check,
+                    color: Theme.of(context).colorScheme.outline,
+                  )
+                : null,
+            horizontalTitleGap: AppDimens.spacingMedium,
+            minLeadingWidth: 0,
+            onTap: () => _selectCategory(_categories[index]),
+          ),
+        ),
       ),
-      builder: (context) {
-        return Column(
-          children: [
-            Container(
-              padding: EdgeInsets.all(AppDimens.appPadding),
-              decoration: AppDecorations.bottomBorderedBoxDecoration(context),
-              width: double.infinity,
-              child: Text(
-                'Select Category',
-                style: Theme.of(context).textTheme.titleLarge,
-              ),
-            ),
-            Expanded(
-              child: Container(
-                color: Theme.of(context).colorScheme.surface,
-                child: SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      ..._categories.map(
-                        (category) => Container(
-                          color: category.name == _selectedCategory
-                              ? Theme.of(
-                                  context,
-                                ).colorScheme.primary.withValues(alpha: 0.5)
-                              : null,
-                          child: ListTile(
-                            // TODO: Add icons to categories - default to folder_outlined if no icon provided
-                            leading: Icon(
-                              Icons.folder_outlined,
-                              color: Theme.of(context).colorScheme.outline,
-                            ),
-
-                            title: Text(
-                              category.name,
-                              style: Theme.of(context).textTheme.bodyMedium,
-                            ),
-                            trailing: category.name == _selectedCategory
-                                ? Icon(
-                                    Icons.check,
-                                    color: Theme.of(
-                                      context,
-                                    ).colorScheme.outline,
-                                  )
-                                : null,
-                            horizontalTitleGap: AppDimens.spacingMedium,
-                            minLeadingWidth: 0,
-                            onTap: () {
-                              setState(() {
-                                _selectedCategory = category.name;
-                                _categoryController.text = _selectedCategory!;
-                              });
-                              Navigator.pop(context);
-                            },
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-            // const SizedBox(height: MediaQuery.of(context).viewInsets.bottom),
-          ],
-        );
-      },
     );
+  }
+
+  void _selectCategory(Category category) {
+    setState(() {
+      _selectedCategory = category.name;
+      _categoryController.text = _selectedCategory!;
+    });
+    Navigator.pop(context);
+  }
+
+  void _showTagsPicker() {
+    PickerSheet.show(
+      context,
+      'Select Tags',
+      // TODO: make this reusable for other pickers (tags for example)
+      ListView.builder(
+        itemCount: _availableTags.length,
+        itemBuilder: (context, index) => Container(
+          color: _availableTags[index] == _selectedTags
+              ? Theme.of(context).colorScheme.primary.withValues(alpha: 0.5)
+              : null,
+          child: ListTile(
+            // TODO: Add icons to categories - default to folder_outlined if no icon provided
+            leading: Icon(
+              Icons.tag_outlined,
+              color: Theme.of(context).colorScheme.outline,
+            ),
+            title: Text(
+              _availableTags[index],
+              style: Theme.of(context).textTheme.bodyMedium,
+            ),
+            trailing: _availableTags[index] == _selectedTags
+                ? Icon(
+                    Icons.check,
+                    color: Theme.of(context).colorScheme.outline,
+                  )
+                : null,
+            horizontalTitleGap: AppDimens.spacingMedium,
+            minLeadingWidth: 0,
+            onTap: () => _selectTag(_availableTags[index]),
+          ),
+        ),
+      ),
+    );
+  }
+
+  void _selectTag(String tag) {
+    setState(() {
+      _selectedTags.add(tag);
+    });
+    print('Tag selected: $tag, but nothing happens yet');
+    // Navigator.pop(context);
   }
 
   @override
@@ -219,6 +232,7 @@ class _ProjectCreationFormState extends State<ProjectCreationForm> {
     return Form(
       key: widget.formKey,
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           ProjectCreationFormField(
             label: 'Name',
@@ -315,22 +329,28 @@ class _ProjectCreationFormState extends State<ProjectCreationForm> {
           ProjectCreationFormField(
             label: 'Tags',
             hasBorder: false,
-            childField: TextFormField(
-              controller: _tagsController,
-              readOnly: true,
-              style: Theme.of(context).textTheme.bodyMedium,
-              cursorColor: Theme.of(context).colorScheme.outline,
-              decoration: AppDecorations.borderlessInputDecoration(context),
+            childField: Wrap(
+              spacing: AppDimens.spacingSmall,
+              children: [
+                // Selected tags
+                ..._selectedTags.map(
+                  (tag) => Container(
+                    decoration: AppDecorations.roundIconFrame(context),
+                    child: Text(tag),
+                  ),
+                ),
+                // Add tag button
+                Container(
+                  decoration: AppDecorations.roundIconFrame(context),
+                  child: IconButton(
+                    padding: EdgeInsets.zero,
+                    visualDensity: VisualDensity.compact,
+                    icon: Icon(Icons.add),
+                    onPressed: _showTagsPicker,
+                  ),
+                ),
+              ],
             ),
-            // childField: TagsInputField(
-            //   selectedTags: _selectedTags,
-            //   onTagsChanged: (tags) {
-            //     setState(() {
-            //       _selectedTags = tags;
-            //     });
-            //     print('Tags changed: $tags');
-            //   },
-            // ),
           ),
           const SizedBox(height: AppDimens.spacingMedium),
           ProjectCreationFormField(
