@@ -50,13 +50,6 @@ class InMemoryProjectRepository implements ProjectRepository {
     return updatedProject;
   }
 
-  /// Delete project by ID
-  ///
-  /// 1. Find the index of the project
-  /// 2. Remove it from the list
-  /// 3. Return true if deleted, false if not found
-  /// - UI can show different messages
-  /// - "Deleted successfully" vs "Project not found"
   @override
   bool delete(String id) {
     final index = _projects.indexWhere((p) => p.id == id);

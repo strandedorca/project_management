@@ -23,13 +23,15 @@ class ProjectCreationFormField extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         Text(label, style: Theme.of(context).textTheme.titleMedium),
-        const SizedBox(height: AppDimens.spacingSmall),
+        const SizedBox(height: AppDimens.spacingMedium),
         Container(
           padding:
               hasBorder // Border means there is a padding
               ? EdgeInsets.only(
-                  right: hasSuffixIcon ? 0 : AppDimens.paddingSmall + 5,
-                  left: AppDimens.paddingSmall + 5,
+                  right: hasSuffixIcon
+                      ? 0
+                      : AppDimens.paddingSmall + AppDimens.spacingExtraSmall,
+                  left: AppDimens.paddingSmall + AppDimens.spacingExtraSmall,
                 )
               : null,
           decoration: hasBorder

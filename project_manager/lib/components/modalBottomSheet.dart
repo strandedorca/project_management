@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:project_manager/themes/decorations.dart';
 import 'package:project_manager/themes/dimens.dart';
 
-class PickerSheet extends StatelessWidget {
-  const PickerSheet({super.key, required this.title, required this.body});
+class ModelBottomSheet extends StatelessWidget {
+  const ModelBottomSheet({super.key, required this.title, required this.body});
 
   final String title;
   final Widget body;
@@ -17,7 +17,7 @@ class PickerSheet extends StatelessWidget {
         AppDimens.borderRadiusMedium,
       ),
       builder: (context) {
-        return PickerSheet(title: title, body: body);
+        return ModelBottomSheet(title: title, body: body);
       },
     );
   }

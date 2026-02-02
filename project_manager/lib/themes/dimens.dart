@@ -6,8 +6,10 @@ class AppDimens {
   static const double appPadding = 20.0;
 
   // Spacing
+  static const double spacingExtraSmall = 4.0;
   static const double spacingSmall = 8.0;
   static const double spacingMedium = 16.0;
+  static const double spacingLarge = 24.0;
 
   // Icon Sizes
   static const double iconSmall = 18.0;
