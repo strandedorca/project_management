@@ -3,6 +3,8 @@ import 'package:project_manager/themes/decorations.dart';
 import 'package:project_manager/themes/dimens.dart';
 
 // currently only supports two options
+// 0 - first option
+// 1 - second option
 class OptionSwitcher extends StatefulWidget {
   const OptionSwitcher({
     super.key,

@@ -1,7 +1,21 @@
 import 'package:flutter/material.dart';
 
+class Option {
+  final String id;
+  final String label;
+
+  const Option({required this.id, required this.label});
+}
+
 class CustomDropdown extends StatefulWidget {
-  const CustomDropdown({super.key});
+  const CustomDropdown({
+    super.key,
+    required this.defaultOptionId,
+    required this.options,
+  });
+
+  final String defaultOptionId;
+  final List<Option> options;
 
   @override
   State<CustomDropdown> createState() => _CustomDropdownState();
@@ -10,6 +24,6 @@ class CustomDropdown extends StatefulWidget {
 class _CustomDropdownState extends State<CustomDropdown> {
   @override
   Widget build(BuildContext context) {
-    return const Text('proi');
+    return Text(widget.defaultOptionId);
   }
 }

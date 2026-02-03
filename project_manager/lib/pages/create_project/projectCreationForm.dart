@@ -8,6 +8,7 @@ import 'package:project_manager/components/optionSwitcher.dart';
 import 'package:project_manager/components/tagPicker.dart';
 import 'package:project_manager/models/category.dart';
 import 'package:project_manager/models/importance_mode.dart';
+import 'package:project_manager/models/priority_level.dart';
 import 'package:project_manager/models/tag.dart';
 import 'package:project_manager/pages/create_project/projectCreationFormField.dart';
 import 'package:project_manager/themes/decorations.dart';
@@ -175,8 +176,8 @@ class _ProjectCreationFormState extends State<ProjectCreationForm> {
                   Expanded(
                     child: _importanceMode == ImportanceMode.weight
                         ? Container(
-                            padding: EdgeInsets.symmetric(
-                              horizontal: AppDimens.paddingMedium,
+                            padding: EdgeInsets.only(
+                              left: AppDimens.paddingMedium,
                             ),
                             decoration: AppDecorations.roundedBorderedBox(
                               context,
@@ -185,9 +186,21 @@ class _ProjectCreationFormState extends State<ProjectCreationForm> {
                             child: BorderlessTextFormField(
                               controller: _weightController,
                               maxLines: 1,
+                              suffixIcon: Icon(
+                                Icons.percent_outlined,
+                                color: Theme.of(context).colorScheme.outline,
+                                size: AppDimens.iconSmall,
+                              ),
                             ),
                           )
-                        : CustomDropdown(),
+                        : CustomDropdown(
+                            defaultOptionId: PriorityLevel
+                                .non
+                                .id, // default option is no priority
+                            options: PriorityLevel.values
+                                .map((e) => Option(id: e.id, label: e.label))
+                                .toList(),
+                          ),
                   ),
                 ],
               ),
