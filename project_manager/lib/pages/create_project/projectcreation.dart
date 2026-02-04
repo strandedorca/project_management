@@ -43,6 +43,7 @@ class _ProjectCreationState extends State<ProjectCreation> {
           // Form
           body: Padding(
             padding: EdgeInsets.all(AppDimens.appPadding),
+            // Make the form scrollable
             child: SingleChildScrollView(
               child: ProjectCreationForm(formKey: _formKey),
             ),

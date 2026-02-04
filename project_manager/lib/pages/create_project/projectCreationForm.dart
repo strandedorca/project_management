@@ -5,13 +5,13 @@ import 'package:project_manager/components/categoryPickerFormField.dart';
 import 'package:project_manager/components/customDropdown.dart';
 import 'package:project_manager/components/datePickerFormField.dart';
 import 'package:project_manager/components/optionSwitcher.dart';
+import 'package:project_manager/components/paddedRoundedBorderedBox.dart';
 import 'package:project_manager/components/tagPicker.dart';
 import 'package:project_manager/models/category.dart';
 import 'package:project_manager/models/importance_mode.dart';
 import 'package:project_manager/models/priority_level.dart';
 import 'package:project_manager/models/tag.dart';
 import 'package:project_manager/pages/create_project/projectCreationFormField.dart';
-import 'package:project_manager/themes/decorations.dart';
 import 'package:project_manager/themes/dimens.dart';
 
 class ProjectCreationForm extends StatefulWidget {
@@ -29,7 +29,8 @@ class _ProjectCreationFormState extends State<ProjectCreationForm> {
   DateTime? _selectedDate;
   late List<Tag> _allTags;
   List<String> _selectedTagIds = [];
-  ImportanceMode _importanceMode = ImportanceMode.weight;
+  // ImportanceMode _importanceMode = ImportanceMode.weight;
+  ImportanceMode _importanceMode = ImportanceMode.priority;
   String? _selectedPriority;
 
   @override
@@ -174,15 +175,14 @@ class _ProjectCreationFormState extends State<ProjectCreationForm> {
 
                   const SizedBox(width: AppDimens.spacingMedium),
                   Expanded(
+                    // TODO:retain the value of the weight/priority when the importance mode is changed
                     child: _importanceMode == ImportanceMode.weight
-                        ? Container(
+                        ? PaddedRoundedBorderedBox(
                             padding: EdgeInsets.only(
                               left: AppDimens.paddingMedium,
                             ),
-                            decoration: AppDecorations.roundedBorderedBox(
-                              context,
-                              999,
-                            ),
+                            borderRadius:
+                                999, //should i let this totally rounded or square rounded?
                             child: BorderlessTextFormField(
                               controller: _weightController,
                               maxLines: 1,
@@ -195,7 +195,7 @@ class _ProjectCreationFormState extends State<ProjectCreationForm> {
                           )
                         : CustomDropdown(
                             defaultOptionId: PriorityLevel
-                                .non
+                                .no
                                 .id, // default option is no priority
                             options: PriorityLevel.values
                                 .map((e) => Option(id: e.id, label: e.label))

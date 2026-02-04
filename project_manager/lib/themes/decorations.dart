@@ -91,10 +91,7 @@ class AppDecorations {
 
   // Red debug containers
   static BoxDecoration redDebugBox() {
-    return BoxDecoration(
-      color: Colors.red,
-      borderRadius: BorderRadius.circular(AppDimens.borderRadiusSmall),
-    );
+    return BoxDecoration(color: Colors.red);
   }
 
   // Round icon frame decoration
