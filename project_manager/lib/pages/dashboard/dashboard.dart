@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:project_manager/models/user.dart';
+import 'package:project_manager/pages/create_project/projectCreation.dart';
 import 'package:project_manager/pages/dashboard/dashboardAppbar.dart';
 import 'package:project_manager/pages/dashboard/deadlines.dart';
 import 'package:project_manager/pages/dashboard/dueTasks.dart';
 import 'package:project_manager/pages/dashboard/projects.dart';
 import 'package:project_manager/pages/dashboard/section.dart';
 import 'package:project_manager/services/user_service.dart';
+import 'package:project_manager/themes/decorations.dart';
 import 'package:project_manager/themes/dimens.dart';
 
 class Dashboard extends StatefulWidget {
@@ -57,6 +59,18 @@ class _DashboardState extends State<Dashboard> {
                 ],
               ),
             ),
+          ),
+          floatingActionButton: FloatingActionButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => ProjectCreation()),
+              );
+            },
+            elevation: 0,
+            backgroundColor: Theme.of(context).colorScheme.primary,
+            shape: AppDecorations.roundedBorderedRectangleBorder(context, 999),
+            child: Icon(Icons.add),
           ),
         ),
       ),

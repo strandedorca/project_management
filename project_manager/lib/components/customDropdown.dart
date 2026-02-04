@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:project_manager/components/paddedRoundedBorderedBox.dart';
+import 'package:project_manager/themes/decorations.dart';
 import 'package:project_manager/themes/dimens.dart';
 
 class Option {
@@ -14,11 +15,12 @@ class CustomDropdown extends StatefulWidget {
     super.key,
     required this.defaultOptionId,
     required this.options,
+    required this.onSelected,
   });
 
   final String defaultOptionId;
   final List<Option> options;
-
+  final ValueChanged<String> onSelected;
   @override
   State<CustomDropdown> createState() => _CustomDropdownState();
 }
@@ -47,7 +49,22 @@ class _CustomDropdownState extends State<CustomDropdown> {
   void _showOverlay() {
     final renderBox =
         _priorityTargetKey.currentContext!.findRenderObject() as RenderBox;
+    final position = renderBox.localToGlobal(Offset.zero);
     final size = renderBox.size;
+
+    final mediaQuery = MediaQuery.of(context);
+    final viewportHeight = mediaQuery.size.height;
+    final viewPadding = mediaQuery.viewPadding;
+    final bottomBarHeight = 56;
+    final spaceBelow =
+        viewportHeight -
+        position.dy -
+        size.height -
+        viewPadding.bottom -
+        bottomBarHeight;
+
+    final maxDropdownHeight = 48 * 4;
+    final openAbove = spaceBelow < maxDropdownHeight;
 
     _overlayEntry = OverlayEntry(
       builder: (context) => Stack(
@@ -62,26 +79,40 @@ class _CustomDropdownState extends State<CustomDropdown> {
           Positioned(
             width: size.width,
             child: CompositedTransformFollower(
+              targetAnchor: !openAbove
+                  ? Alignment.topLeft
+                  : Alignment.bottomRight,
+              followerAnchor: !openAbove
+                  ? Alignment.topLeft
+                  : Alignment.bottomRight,
               link: priorityDropdownLayerLink,
               child: Material(
+                color: Theme.of(context).colorScheme.surface,
+
+                shape: AppDecorations.roundedBorderedRectangleBorder(
+                  context,
+                  AppDimens.borderRadiusSmall,
+                ),
+                clipBehavior: Clip.hardEdge,
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     ...widget.options.map(
                       (e) => SizedBox(
                         height: size.height,
-                        child: Container(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: AppDimens.paddingMedium,
-                          ),
-                          child: InkWell(
-                            onTap: () {
-                              setState(() {
-                                _selectedOptionId = e.id;
-                                _selectedOptionLabel = e.label;
-                              });
-                              _closeDropdown();
-                            },
+                        child: InkWell(
+                          onTap: () {
+                            setState(() {
+                              _selectedOptionId = e.id;
+                              _selectedOptionLabel = e.label;
+                              widget.onSelected(e.id);
+                            });
+                            _closeDropdown();
+                          },
+                          child: Container(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: AppDimens.paddingMedium,
+                            ),
                             child: Row(
                               children: [
                                 Expanded(child: Text(e.label)),
@@ -111,21 +142,26 @@ class _CustomDropdownState extends State<CustomDropdown> {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: _onTap,
-      key: _priorityTargetKey,
-      child: CompositedTransformTarget(
-        link: priorityDropdownLayerLink,
-        child: PaddedRoundedBorderedBox(
-          padding: EdgeInsets.symmetric(horizontal: AppDimens.paddingMedium),
-          borderRadius:
-              999, //should i let this totally rounded or square rounded?
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Expanded(child: Text(_selectedOptionLabel)),
-              Icon(Icons.arrow_drop_down),
-            ],
+    return Material(
+      color: Colors.transparent,
+      borderRadius: BorderRadius.circular(AppDimens.borderRadiusSmall),
+      clipBehavior: Clip.hardEdge,
+      child: InkWell(
+        onTap: _onTap,
+        key: _priorityTargetKey,
+        child: CompositedTransformTarget(
+          link: priorityDropdownLayerLink,
+          child: PaddedRoundedBorderedBox(
+            padding: EdgeInsets.symmetric(horizontal: AppDimens.paddingMedium),
+            borderRadius: AppDimens.borderRadiusSmall,
+
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(child: Text(_selectedOptionLabel)),
+                Icon(Icons.arrow_drop_down),
+              ],
+            ),
           ),
         ),
       ),

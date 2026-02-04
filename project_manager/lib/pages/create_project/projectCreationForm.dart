@@ -29,9 +29,8 @@ class _ProjectCreationFormState extends State<ProjectCreationForm> {
   DateTime? _selectedDate;
   late List<Tag> _allTags;
   List<String> _selectedTagIds = [];
-  // ImportanceMode _importanceMode = ImportanceMode.weight;
-  ImportanceMode _importanceMode = ImportanceMode.priority;
-  String? _selectedPriority;
+  ImportanceMode _importanceMode = ImportanceMode.weight;
+  String _selectedPriorityId = PriorityLevel.no.id;
 
   @override
   void initState() {
@@ -97,7 +96,7 @@ class _ProjectCreationFormState extends State<ProjectCreationForm> {
             label: 'Description',
             childField: BorderlessTextFormField(
               controller: _descriptionController,
-              maxLines: 3,
+              // maxLines: 3,
               minLines: 3,
             ),
           ),
@@ -194,18 +193,22 @@ class _ProjectCreationFormState extends State<ProjectCreationForm> {
                             ),
                           )
                         : CustomDropdown(
-                            defaultOptionId: PriorityLevel
-                                .no
-                                .id, // default option is no priority
+                            defaultOptionId: _selectedPriorityId,
                             options: PriorityLevel.values
                                 .map((e) => Option(id: e.id, label: e.label))
                                 .toList(),
+                            onSelected: (priorityId) {
+                              setState(() {
+                                _selectedPriorityId = priorityId;
+                              });
+                            },
                           ),
                   ),
                 ],
               ),
             ),
           ),
+          // const SizedBox(height: 150),
         ],
       ),
     );

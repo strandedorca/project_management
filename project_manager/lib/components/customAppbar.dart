@@ -40,18 +40,25 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
         children: [
           // Tappable leading icon
           if (leading != null)
-            InkWell(
-              onTap:
-                  leadingOnTap ??
-                  () {
-                    print('Leading icon pressed');
-                  },
-              // borderRadius: BorderRadius.circular(28),
-              child: Container(
-                width: 56,
-                height: 56,
-                decoration: AppDecorations.roundIconFrame(context),
-                child: leading,
+            Material(
+              shape: AppDecorations.roundedBorderedRectangleBorder(
+                context,
+                999,
+              ),
+              clipBehavior: Clip.hardEdge,
+              child: InkWell(
+                onTap:
+                    leadingOnTap ??
+                    () {
+                      print('Leading icon pressed');
+                    },
+                // borderRadius: BorderRadius.circular(28),
+                child: Container(
+                  width: 56,
+                  height: 56,
+                  decoration: AppDecorations.roundIconFrame(context),
+                  child: leading,
+                ),
               ),
             ),
           // Title

@@ -8,16 +8,18 @@ class PaddedRoundedBorderedBox extends StatelessWidget {
     this.padding,
     this.borderRadius = AppDimens.borderRadiusSmall,
     required this.child,
+    this.clipBehavior = Clip.none,
   });
 
   final EdgeInsets? padding;
   final double borderRadius;
   final Widget child;
-
+  final Clip clipBehavior;
   @override
   Widget build(BuildContext context) {
     return Container(
       decoration: AppDecorations.roundedBorderedBox(context, borderRadius),
+      clipBehavior: clipBehavior,
       padding: padding ?? EdgeInsets.all(AppDimens.paddingMedium),
       child: child,
     );
