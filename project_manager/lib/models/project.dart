@@ -1,7 +1,6 @@
 // Project model
 class Project {
   // All properties
-  // For now everything is a string
   final String id;
   final String name;
   final String? description; // Made nullable since it's optional

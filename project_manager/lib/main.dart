@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 // ignore: unused_import
 import 'package:project_manager/app/dependencies.dart'; // Ensures global services/repos are initialized
-import 'package:project_manager/pages/dashboard/dashboard.dart';
+import 'package:project_manager/pages/project_list/projectList.dart';
 import 'package:project_manager/themes/app_theme.dart';
 
 // Entry point of the application
@@ -17,7 +17,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Project Manager',
-      home: Dashboard(title: 'Dashboard'),
+      // home: Dashboard(title: 'Dashboard'),
+      home: ProjectList(),
       theme: AppTheme.lightTheme,
       // TODO: Add dark theme & theme mode
     );

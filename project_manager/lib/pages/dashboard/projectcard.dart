@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:project_manager/components/customChip.dart';
 import 'package:project_manager/models/project.dart';
 import 'package:project_manager/pages/dashboard/projectCardProgress.dart';
 import 'package:project_manager/themes/dimens.dart';
@@ -48,7 +49,16 @@ class ProjectCard extends StatelessWidget {
                           child: Row(
                             spacing: AppDimens.spacingSmall,
                             children: (project.tags ?? [])
-                                .map((tag) => _Tag(tag: tag))
+                                .map(
+                                  (tag) => CustomChip(
+                                    name: tag,
+                                    color: Theme.of(
+                                      context,
+                                    ).colorScheme.outlineVariant,
+                                    verticalPadding: 4.0,
+                                    horizontalPadding: 10.0,
+                                  ),
+                                )
                                 .toList(),
                           ),
                         ),
@@ -94,28 +104,6 @@ class ProjectCard extends StatelessWidget {
           ),
         ),
       ),
-    );
-  }
-}
-
-class _Tag extends StatelessWidget {
-  final String tag;
-  final double tagVerticalPadding = 4.0;
-  final double tagHorizontalPadding = 10.0;
-  const _Tag({required this.tag});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.symmetric(
-        vertical: tagVerticalPadding,
-        horizontal: tagHorizontalPadding,
-      ),
-      decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.outlineVariant,
-        borderRadius: BorderRadius.circular(AppDimens.borderRadiusMedium),
-      ),
-      child: Text(tag, style: Theme.of(context).textTheme.labelSmall),
     );
   }
 }
