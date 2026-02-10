@@ -3,7 +3,7 @@ import 'package:project_manager/components/customAppbar.dart';
 import 'package:project_manager/components/customChip.dart';
 import 'package:project_manager/data/sample_data.dart';
 import 'package:project_manager/data/sample_statuses.dart';
-import 'package:project_manager/pages/project_list/projectCard.dart';
+import 'package:project_manager/pages/projects/projectCard.dart';
 import 'package:project_manager/themes/dimens.dart';
 
 class ProjectList extends StatelessWidget {
