@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:project_manager/appShell.dart';
 import 'package:project_manager/themes/decorations.dart';
 import 'package:project_manager/themes/dimens.dart';
 
@@ -7,10 +8,12 @@ class CustomFloatingActionButton extends StatefulWidget {
     super.key,
     required this.isExpanded,
     required this.onTap,
+    required this.actionButtons,
   });
 
   final bool isExpanded;
   final VoidCallback onTap;
+  final List<ActionButton> actionButtons;
 
   @override
   State<CustomFloatingActionButton> createState() =>
@@ -38,18 +41,14 @@ class _CustomFloatingActionButtonState
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    _buildOption(
-                      context,
-                      Icons.check_circle_outline,
-                      'New task',
-                      widget.onTap,
-                    ),
-                    _buildOption(
-                      context,
-                      Icons.folder_open_rounded,
-                      'New project',
-                      widget.onTap,
-                    ),
+                    for (var actionButton in widget.actionButtons)
+                      _buildOption(
+                        context,
+                        actionButton.icon,
+                        actionButton.label,
+                        actionButton.onTap,
+                        widget.onTap,
+                      ),
                   ],
                 ),
               )
@@ -74,10 +73,14 @@ Widget _buildOption(
   BuildContext context,
   IconData icon,
   String label,
+  VoidCallback onTapOption,
   VoidCallback onTap,
 ) {
   return InkWell(
-    onTap: onTap,
+    onTap: () {
+      onTapOption();
+      onTap();
+    },
     child: Padding(
       padding: EdgeInsets.all(AppDimens.paddingMedium),
       child: Row(
