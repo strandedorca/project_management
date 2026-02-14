@@ -5,27 +5,30 @@ import 'package:project_manager/themes/dimens.dart';
 class ModelBottomSheet extends StatelessWidget {
   const ModelBottomSheet({
     super.key,
-    required this.title,
+    this.title,
     required this.body,
     this.actionIcon,
   });
 
-  final String title;
+  final String? title;
   final Widget body;
   final Widget? actionIcon;
 
   static Future<dynamic> show(
     BuildContext context,
-    String title,
+    String? title,
     Widget body, {
     Widget? actionIcon,
   }) {
     return showModalBottomSheet(
       context: context,
-      backgroundColor: Theme.of(context).colorScheme.primary,
-      shape: AppDecorations.roundedBorderedRectangleBorder(
-        context,
-        AppDimens.borderRadiusMedium,
+      clipBehavior: Clip.hardEdge,
+      shape: RoundedRectangleBorder(
+        side: BorderSide(width: AppDimens.borderWidthMedium),
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(AppDimens.borderRadiusMedium),
+          topRight: Radius.circular(AppDimens.borderRadiusMedium),
+        ),
       ),
       builder: (context) {
         return ModelBottomSheet(
@@ -42,24 +45,26 @@ class ModelBottomSheet extends StatelessWidget {
     return Column(
       children: [
         // Header
-        Container(
-          padding: EdgeInsets.all(AppDimens.appPadding),
-          decoration: AppDecorations.bottomBorderedBoxDecoration(context),
-          width: double.infinity,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            // crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Text(title, style: Theme.of(context).textTheme.titleLarge),
-              if (actionIcon != null)
-                SizedBox(
-                  height: AppDimens.iconSmall,
-                  width: AppDimens.iconMedium,
-                  child: actionIcon!,
-                ),
-            ],
+        if (title != null)
+          Container(
+            padding: EdgeInsets.all(AppDimens.appPadding),
+            decoration: AppDecorations.bottomBorderedBoxDecoration(
+              context,
+            ).copyWith(color: Theme.of(context).colorScheme.primary),
+            width: double.infinity,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(title!, style: Theme.of(context).textTheme.titleLarge),
+                if (actionIcon != null)
+                  SizedBox(
+                    height: AppDimens.iconSmall,
+                    width: AppDimens.iconMedium,
+                    child: actionIcon!,
+                  ),
+              ],
+            ),
           ),
-        ),
         //  Main content
         Expanded(
           child: Container(
@@ -67,7 +72,6 @@ class ModelBottomSheet extends StatelessWidget {
             child: body,
           ),
         ),
-        // const SizedBox(height: MediaQuery.of(context).viewInsets.bottom),
       ],
     );
   }

@@ -9,6 +9,7 @@ import 'package:project_manager/components/paddedRoundedBorderedBox.dart';
 import 'package:project_manager/components/tagPicker.dart';
 import 'package:project_manager/models/category.dart';
 import 'package:project_manager/models/importance_mode.dart';
+import 'package:project_manager/models/option.dart';
 import 'package:project_manager/models/priority_level.dart';
 import 'package:project_manager/models/tag.dart';
 import 'package:project_manager/pages/create_project/projectCreationFormField.dart';
@@ -107,12 +108,20 @@ class _ProjectCreationFormState extends State<ProjectCreationForm> {
                 child: ProjectCreationFormField(
                   label: 'Category',
                   hasSuffixIcon: true,
-                  childField: CategoryPickerFormField(
-                    controller: _categoryController,
-                    categories: _categories,
-                    selectedCategoryId: _selectedCategoryId,
-                    onCategorySelected: (category) {
-                      setState(() => _selectedCategoryId = category.id);
+                  childField: ModalPickerFormField(
+                    modalTitle: 'Select Category',
+                    options: _categories
+                        .map(
+                          (e) => Option.fromValues(
+                            e.id,
+                            e.name,
+                            Icons.folder_outlined,
+                          ),
+                        )
+                        .toList(),
+                    initialValue: _selectedCategoryId,
+                    onSelected: (value) {
+                      setState(() => _selectedCategoryId = value);
                     },
                   ),
                 ),
@@ -180,8 +189,7 @@ class _ProjectCreationFormState extends State<ProjectCreationForm> {
                             padding: EdgeInsets.only(
                               left: AppDimens.paddingMedium,
                             ),
-                            borderRadius:
-                                999, //should i let this totally rounded or square rounded?
+                            borderRadius: 999,
                             child: CustomTextFormField(
                               controller: _weightController,
                               maxLines: 1,
@@ -194,15 +202,16 @@ class _ProjectCreationFormState extends State<ProjectCreationForm> {
                           )
                         : CustomDropdown(
                             extraBottomSpace: 56,
-                            defaultValue: _selectedPriorityId,
+                            initialValue: _selectedPriorityId,
                             options: PriorityLevel.values
                                 .map(
-                                  (e) => Option(value: e.value, label: e.label),
+                                  (e) =>
+                                      Option.fromValues(e.value, e.label, null),
                                 )
                                 .toList(),
-                            onSelected: (priorityId) {
+                            onSelected: (value) {
                               setState(() {
-                                _selectedPriorityId = priorityId;
+                                _selectedPriorityId = value;
                               });
                             },
                           ),

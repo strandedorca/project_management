@@ -5,30 +5,27 @@ import 'package:project_manager/components/customScrollBar.dart';
 import 'package:project_manager/components/customTextFormField.dart';
 import 'package:project_manager/components/formFieldWrapper.dart';
 import 'package:project_manager/components/formIconButton.dart';
+import 'package:project_manager/models/option.dart';
 import 'package:project_manager/themes/decorations.dart';
 import 'package:project_manager/themes/dimens.dart';
 
-/// CustomDropdown is a dropdown menu that can be used to select an option from a list.
-/// It uses [Overlay] and [LayerLink] to position the dropdown menu relative to the main widget.
-/// It is a wrapper around [CustomTextFormField] and [FormFieldWrapper] to provide a consistent styling.
+// TODO: Add option icon support
+
+/// CustomDropdown is a dropdown menu for selecting a value from a list of options.
+///
+/// It uses [Overlay] and [LayerLink] to float above the main widget.
+/// It wraps around [FormFieldWrapper] and [CustomTextFormField] to achieve consistent styling with other form fields.
 /// The controller is managed internally and is used to control the displayed text field.
-/// The  actual value is stored in the [selectedValue] and is exposed through the [onSelected] callback.
+/// The value is stored in the [selectedValue] and exposed through the [onSelected] callback.
 ///
 /// ## Parameters
-/// - (required) [defaultOptionValue]: The value of the default option to select.
-/// - (required) [options]: The list of options to display in the dropdown.
-///   Option should be an object with an [value] and [label].
+/// - (required) [initialValue]: Initial selected value.
+/// - (required) [options]: The list of options.
+///   Each option must be an [Option] with a [value], [label] and [icon].
 /// - (required) [onSelected]: The callback function to call when an option is selected.
-/// - (optional) [extraBottomSpace]: The extra space to add to the bottom of the dropdown.
-/// - (optional) [hintText]: The hint text to display in the text field.
+/// - (optional) [extraBottomSpace]: Extra spacing considered when positioning the dropdown
+/// - (optional) [hintText]: Placeholder text shown when no option is selected.
 /// - (optional) [suffixIcon]: The icon to display in the suffix of the text field.
-
-class Option {
-  final String value;
-  final String label;
-
-  const Option({required this.value, required this.label});
-}
 
 class _OverlayLayout {
   const _OverlayLayout({required this.anchor, required this.size});
@@ -40,7 +37,7 @@ class _OverlayLayout {
 class CustomDropdown extends StatefulWidget {
   const CustomDropdown({
     super.key,
-    this.defaultValue,
+    this.initialValue,
     required this.options,
     required this.onSelected,
     this.hintText,
@@ -48,7 +45,7 @@ class CustomDropdown extends StatefulWidget {
     this.extraBottomSpace = 0.0,
   });
 
-  final String? defaultValue;
+  final String? initialValue;
   final List<Option> options;
   final ValueChanged<String> onSelected;
   final String? hintText;
@@ -72,7 +69,7 @@ class _CustomDropdownState extends State<CustomDropdown> {
   @override
   void initState() {
     super.initState();
-    _selectedValue = widget.defaultValue;
+    _selectedValue = widget.initialValue;
     if (_selectedValue != null) {
       _controller.text = widget.options
           .firstWhere((e) => e.value == _selectedValue)

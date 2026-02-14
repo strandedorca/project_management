@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:project_manager/app/dependencies.dart';
 import 'package:project_manager/components/button.dart';
-import 'package:project_manager/components/categoryPickerFormField.dart';
 import 'package:project_manager/components/customDropdown.dart';
 import 'package:project_manager/components/customTextFormField.dart';
 import 'package:project_manager/components/datePickerFormField.dart';
 import 'package:project_manager/components/formFieldWrapper.dart';
 import 'package:project_manager/components/modalBottomSheet.dart';
-import 'package:project_manager/models/category.dart';
+import 'package:project_manager/components/modalPickerFormField.dart';
+import 'package:project_manager/components/multiModalPickerFormField.dart';
+import 'package:project_manager/models/option.dart';
 import 'package:project_manager/models/priority_level.dart';
 import 'package:project_manager/pages/tasks/taskCreationModel.dart';
 import 'package:project_manager/themes/dimens.dart';
@@ -38,38 +39,40 @@ class _TaskCreationModalState extends State<TaskCreationModal> {
   final _data = TaskCreationModel();
   bool _loading = false;
   // TODO: Categories are just parent projects
-  late List<Category> _categories;
+  late List<Option> _categoryOptions;
   String? _selectedCategoryId;
   DateTime? _selectedDate;
-  // late List<Tag> _allTags;
-  // List<String> _selectedTagIds = [];
-  // bool _hasTags = false;
+  late List<Option> _tagOptions;
+  List<String> _selectedTagValues = [];
   String? _selectedPriorityValue;
   final List<Option> _priorityOptions = PriorityLevel.values
-      .map((e) => Option(value: e.value, label: e.label))
+      .map((e) => Option.fromValues(e.value, e.label, null))
       .toList();
 
   @override
   void initState() {
     super.initState();
     _fetchCategories();
-    // _fetchTags();
-    // _hasTags = _selectedTagIds.isNotEmpty;
+    _fetchTags();
   }
 
   void _fetchCategories() {
     final categories = categoryService.getAllCategories();
     setState(() {
-      _categories = categories;
+      _categoryOptions = categories
+          .map((e) => Option.fromValues(e.id, e.name, Icons.folder_outlined))
+          .toList();
     });
   }
 
-  // void _fetchTags() {
-  //   final tags = tagService.getAllTags();
-  //   setState(() {
-  //     _allTags = tags;
-  //   });
-  // }
+  void _fetchTags() {
+    final tags = tagService.getAllTags();
+    setState(() {
+      _tagOptions = tags
+          .map((e) => Option.fromValues(e.id, e.name, Icons.label_outlined))
+          .toList();
+    });
+  }
 
   //  TODO:replace controllers with data model
   // Controllers
@@ -124,21 +127,19 @@ class _TaskCreationModalState extends State<TaskCreationModal> {
               hintText: 'Description',
               onSaved: (value) => _data.description = value ?? '',
             ),
-            // TODO: refactor this into a custom form field container and custom text form field
             const SizedBox(height: AppDimens.spacingMedium),
             Row(
               children: [
                 Expanded(
                   child: FormFieldWrapper(
-                    childField: CategoryPickerFormField(
-                      controller: _categoryController,
-                      categories: _categories,
-                      selectedCategoryId: _selectedCategoryId,
-                      onCategorySelected: (category) {
-                        _data.projectId = category.id;
-                        setState(() {
-                          _selectedCategoryId = category.id;
-                        });
+                    childField: ModalPickerFormField(
+                      suffixIcon: Icons.folder_outlined,
+                      modalTitle: 'Select Category',
+                      hintText: 'Category',
+                      options: _categoryOptions,
+                      initialValue: _selectedCategoryId,
+                      onSelected: (value) {
+                        _data.projectId = value;
                       },
                     ),
                     childHasSuffixIcon: true,
@@ -171,7 +172,7 @@ class _TaskCreationModalState extends State<TaskCreationModal> {
                 Expanded(
                   child: CustomDropdown(
                     hintText: 'Priority',
-                    defaultValue: _selectedPriorityValue,
+                    initialValue: _selectedPriorityValue,
                     options: _priorityOptions,
                     onSelected: (value) {
                       setState(() {
@@ -201,12 +202,19 @@ class _TaskCreationModalState extends State<TaskCreationModal> {
               children: [
                 Expanded(
                   child: FormFieldWrapper(
-                    childField: CustomTextFormField(
+                    childField: MultiModalPickerFormField(
                       hintText: 'Tags',
-                      onTap: () => print('tags picker shown'),
-                      readOnly: true,
+                      modalTitle: 'Select Tags',
+                      onSelected: (value) {
+                        setState(() {
+                          _selectedTagValues.add(value);
+                        });
+                      },
+                      options: _tagOptions,
+                      initialValues: _selectedTagValues,
+                      suffixIcon: Icons.label_outlined,
                     ),
-                    suffixIcon: Icons.label_outlined,
+                    childHasSuffixIcon: true,
                   ),
                 ),
                 const SizedBox(width: AppDimens.spacingMedium),
