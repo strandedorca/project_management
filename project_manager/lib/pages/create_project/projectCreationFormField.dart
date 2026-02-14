@@ -5,13 +5,13 @@ import 'package:project_manager/themes/dimens.dart';
 class ProjectCreationFormField extends StatelessWidget {
   const ProjectCreationFormField({
     super.key,
-    required this.label,
+    this.label,
     required this.childField,
     this.hasBorder = true,
     this.hasSuffixIcon = false,
   });
 
-  final String label;
+  final String? label;
   final Widget childField;
   final bool hasBorder;
   final bool hasSuffixIcon;
@@ -22,7 +22,8 @@ class ProjectCreationFormField extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        Text(label, style: Theme.of(context).textTheme.titleMedium),
+        if (label != null)
+          Text(label!, style: Theme.of(context).textTheme.titleMedium),
         const SizedBox(height: AppDimens.spacingMedium),
         Container(
           padding:

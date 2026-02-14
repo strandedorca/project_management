@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:project_manager/components/borderlessTextFormField.dart';
+import 'package:project_manager/components/customTextFormField.dart';
+import 'package:project_manager/components/formIconButton.dart';
 import 'package:project_manager/themes/decorations.dart';
 import 'package:project_manager/themes/dimens.dart';
 import 'package:project_manager/utils/date_formatter.dart';
 
+// TODO: turn this into a general date picker field
 class DeadlinePickerFormField extends StatelessWidget {
   const DeadlinePickerFormField({
     super.key,
@@ -58,28 +60,22 @@ class DeadlinePickerFormField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final hasValue = value != null;
-    return BorderlessTextFormField(
-      textAlignVertical: TextAlignVertical.center,
+    return CustomTextFormField(
+      hintText: 'Deadline',
       controller: controller,
       validator: validator,
       readOnly: true,
       onTap: () => _openDatePicker(context),
       suffixIcon: hasValue && onClear != null
-          ? IconButton(
-              icon: Icon(
-                Icons.cancel_outlined,
-                color: Theme.of(context).colorScheme.outline,
-              ),
+          ? FormIconButton(
+              iconData: Icons.cancel_outlined,
               onPressed: () {
                 controller.clear();
                 onClear?.call();
               },
             )
-          : IconButton(
-              icon: Icon(
-                Icons.calendar_month_outlined,
-                color: Theme.of(context).colorScheme.outline,
-              ),
+          : FormIconButton(
+              iconData: Icons.today_outlined,
               onPressed: () => _openDatePicker(context),
             ),
     );

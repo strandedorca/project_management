@@ -16,6 +16,18 @@ class AppTheme {
         bodyColor: AppColors.textPrimary,
         displayColor: AppColors.textPrimary,
       ),
+      inputDecorationTheme: InputDecorationTheme(
+        border: InputBorder.none,
+        focusedBorder: InputBorder.none,
+        enabledBorder: InputBorder.none,
+        errorBorder: InputBorder.none,
+        disabledBorder: InputBorder.none,
+        hintStyle: AppTextStyles.lightTextTheme.bodyMedium,
+        isDense: true,
+      ),
+      textSelectionTheme: TextSelectionThemeData(
+        cursorColor: AppColors.textPrimary,
+      ),
       useMaterial3: false,
     );
   }

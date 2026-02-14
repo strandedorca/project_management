@@ -14,6 +14,11 @@ class InMemoryCategoryRepository implements CategoryRepository {
     final List<Category> sampleCategories = [
       Category(id: '0', name: 'Inbox'),
       Category(id: '1', name: 'Work'),
+      Category(
+        id: '99',
+        name:
+            'Something with a very long name that should be truncated and not wrapped',
+      ),
       Category(id: '2', name: 'Personal'),
       Category(id: '3', name: 'School'),
       Category(id: '4', name: 'Health'),

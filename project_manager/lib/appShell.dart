@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:project_manager/components/customBottomNavBar.dart';
 import 'package:project_manager/components/customFAB.dart';
 import 'package:project_manager/pages/activities/activities.dart';
+import 'package:project_manager/pages/create_project/projectCreation.dart';
 import 'package:project_manager/pages/dashboard/dashboard.dart';
 import 'package:project_manager/pages/projects/projectList.dart';
 import 'package:project_manager/pages/search/search.dart';
@@ -64,7 +65,10 @@ class _AppShellState extends State<AppShell> {
         label: 'New project',
         onTap: () {
           // TODO: Add logic to handle the tap
-          print('New project');
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => ProjectCreation()),
+          );
         },
       ),
     ];

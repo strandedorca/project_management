@@ -1,20 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:project_manager/components/borderlessTextFormField.dart';
+import 'package:project_manager/components/customTextFormField.dart';
+import 'package:project_manager/components/formIconButton.dart';
 import 'package:project_manager/components/modalBottomSheet.dart';
 import 'package:project_manager/models/category.dart';
 import 'package:project_manager/themes/dimens.dart';
 
+// TODO: turn this into a general picker form field
 class CategoryPickerFormField extends StatelessWidget {
   const CategoryPickerFormField({
     super.key,
-    required this.controller,
+    this.controller,
     required this.categories,
     required this.selectedCategoryId,
     required this.onCategorySelected,
     this.validator,
   });
 
-  final TextEditingController controller;
+  final TextEditingController? controller;
   final List<Category> categories;
   final String? selectedCategoryId;
   final ValueChanged<Category> onCategorySelected;
@@ -35,19 +37,17 @@ class CategoryPickerFormField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BorderlessTextFormField(
+    return CustomTextFormField(
+      hintText: 'Folder',
       controller: controller,
       readOnly: true,
-      textAlignVertical: TextAlignVertical.center,
       validator: validator,
       onTap: () => _showPicker(context),
-      suffixIcon: IconButton(
-        icon: Icon(
-          Icons.folder_outlined,
-          color: Theme.of(context).colorScheme.outline,
-        ),
+      suffixIcon: FormIconButton(
+        iconData: Icons.folder_outlined,
         onPressed: () => _showPicker(context),
       ),
+      maxLines: 1,
     );
   }
 }
@@ -63,7 +63,7 @@ class _CategoryPickerSheetContent extends StatelessWidget {
   final List<Category> categories;
   final String? selectedCategoryId;
   final ValueChanged<Category> onCategorySelected;
-  final TextEditingController controller;
+  final TextEditingController? controller;
 
   @override
   Widget build(BuildContext context) {
@@ -96,7 +96,7 @@ class _CategoryPickerSheetContent extends StatelessWidget {
             minLeadingWidth: 0,
             onTap: () {
               // Update the controller text and call the onCategorySelected callback
-              controller.text = category.name;
+              controller?.text = category.name;
               onCategorySelected(category);
               Navigator.pop(context);
             },

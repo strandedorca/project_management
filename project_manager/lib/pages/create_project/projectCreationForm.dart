@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:project_manager/app/dependencies.dart';
-import 'package:project_manager/components/borderlessTextFormField.dart';
 import 'package:project_manager/components/categoryPickerFormField.dart';
 import 'package:project_manager/components/customDropdown.dart';
+import 'package:project_manager/components/customTextFormField.dart';
 import 'package:project_manager/components/datePickerFormField.dart';
 import 'package:project_manager/components/optionSwitcher.dart';
 import 'package:project_manager/components/paddedRoundedBorderedBox.dart';
@@ -30,7 +30,7 @@ class _ProjectCreationFormState extends State<ProjectCreationForm> {
   late List<Tag> _allTags;
   List<String> _selectedTagIds = [];
   ImportanceMode _importanceMode = ImportanceMode.weight;
-  String _selectedPriorityId = PriorityLevel.no.id;
+  String _selectedPriorityId = PriorityLevel.no.value;
 
   @override
   void initState() {
@@ -85,7 +85,7 @@ class _ProjectCreationFormState extends State<ProjectCreationForm> {
         children: [
           ProjectCreationFormField(
             label: 'Name',
-            childField: BorderlessTextFormField(
+            childField: CustomTextFormField(
               controller: _nameController,
               validator: _nameValidator,
               autofocus: true,
@@ -94,7 +94,7 @@ class _ProjectCreationFormState extends State<ProjectCreationForm> {
           const SizedBox(height: AppDimens.spacingMedium),
           ProjectCreationFormField(
             label: 'Description',
-            childField: BorderlessTextFormField(
+            childField: CustomTextFormField(
               controller: _descriptionController,
               // maxLines: 3,
               minLines: 3,
@@ -182,7 +182,7 @@ class _ProjectCreationFormState extends State<ProjectCreationForm> {
                             ),
                             borderRadius:
                                 999, //should i let this totally rounded or square rounded?
-                            child: BorderlessTextFormField(
+                            child: CustomTextFormField(
                               controller: _weightController,
                               maxLines: 1,
                               suffixIcon: Icon(
@@ -193,9 +193,12 @@ class _ProjectCreationFormState extends State<ProjectCreationForm> {
                             ),
                           )
                         : CustomDropdown(
-                            defaultOptionId: _selectedPriorityId,
+                            extraBottomSpace: 56,
+                            defaultValue: _selectedPriorityId,
                             options: PriorityLevel.values
-                                .map((e) => Option(id: e.id, label: e.label))
+                                .map(
+                                  (e) => Option(value: e.value, label: e.label),
+                                )
                                 .toList(),
                             onSelected: (priorityId) {
                               setState(() {
@@ -208,7 +211,6 @@ class _ProjectCreationFormState extends State<ProjectCreationForm> {
               ),
             ),
           ),
-          // const SizedBox(height: 150),
         ],
       ),
     );

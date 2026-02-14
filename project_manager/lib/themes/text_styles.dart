@@ -36,7 +36,7 @@ class AppTextStyles {
     titleMedium: TextStyle(fontSize: 16.5, fontWeight: FontWeight.w600),
 
     bodyLarge: TextStyle(fontSize: 16),
-    bodyMedium: TextStyle(fontSize: 16),
+    bodyMedium: TextStyle(fontSize: 16, fontWeight: FontWeight.w400),
     bodySmall: TextStyle(fontSize: 14),
 
     // labelLarge: TextStyle(fontSize: 16, fontWeight: FontWeight.w400),

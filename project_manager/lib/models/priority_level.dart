@@ -4,8 +4,8 @@ enum PriorityLevel {
   medium('2', 'Medium'),
   high('3', 'High');
 
-  final String id;
+  final String value;
   final String label;
 
-  const PriorityLevel(this.id, this.label);
+  const PriorityLevel(this.value, this.label);
 }

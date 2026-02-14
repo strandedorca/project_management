@@ -24,4 +24,7 @@ class AppDimens {
   // Border Widths
   static const double borderWidthMedium = 1.5;
   static const double borderWidthLarge = 3.0;
+
+  // Form
+  static const double formFieldSize = 42.0;
 }

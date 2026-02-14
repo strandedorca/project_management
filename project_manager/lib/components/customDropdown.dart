@@ -1,71 +1,102 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
-import 'package:project_manager/components/paddedRoundedBorderedBox.dart';
+import 'package:project_manager/components/customScrollBar.dart';
+import 'package:project_manager/components/customTextFormField.dart';
+import 'package:project_manager/components/formFieldWrapper.dart';
+import 'package:project_manager/components/formIconButton.dart';
 import 'package:project_manager/themes/decorations.dart';
 import 'package:project_manager/themes/dimens.dart';
 
+/// CustomDropdown is a dropdown menu that can be used to select an option from a list.
+/// It uses [Overlay] and [LayerLink] to position the dropdown menu relative to the main widget.
+/// It is a wrapper around [CustomTextFormField] and [FormFieldWrapper] to provide a consistent styling.
+/// The controller is managed internally and is used to control the displayed text field.
+/// The  actual value is stored in the [selectedValue] and is exposed through the [onSelected] callback.
+///
+/// ## Parameters
+/// - (required) [defaultOptionValue]: The value of the default option to select.
+/// - (required) [options]: The list of options to display in the dropdown.
+///   Option should be an object with an [value] and [label].
+/// - (required) [onSelected]: The callback function to call when an option is selected.
+/// - (optional) [extraBottomSpace]: The extra space to add to the bottom of the dropdown.
+/// - (optional) [hintText]: The hint text to display in the text field.
+/// - (optional) [suffixIcon]: The icon to display in the suffix of the text field.
+
 class Option {
-  final String id;
+  final String value;
   final String label;
 
-  const Option({required this.id, required this.label});
+  const Option({required this.value, required this.label});
+}
+
+class _OverlayLayout {
+  const _OverlayLayout({required this.anchor, required this.size});
+
+  final Alignment anchor;
+  final Size size;
 }
 
 class CustomDropdown extends StatefulWidget {
   const CustomDropdown({
     super.key,
-    required this.defaultOptionId,
+    this.defaultValue,
     required this.options,
     required this.onSelected,
+    this.hintText,
+    this.suffixIcon,
+    this.extraBottomSpace = 0.0,
   });
 
-  final String defaultOptionId;
+  final String? defaultValue;
   final List<Option> options;
   final ValueChanged<String> onSelected;
+  final String? hintText;
+  final IconData? suffixIcon;
+  final double extraBottomSpace;
+
   @override
   State<CustomDropdown> createState() => _CustomDropdownState();
 }
 
 class _CustomDropdownState extends State<CustomDropdown> {
-  late String _selectedOptionId;
-  late String _selectedOptionLabel;
+  late String? _selectedValue;
+  final _controller = TextEditingController();
   OverlayEntry? _overlayEntry;
-  final LayerLink priorityDropdownLayerLink = LayerLink();
-  final GlobalKey _priorityTargetKey = GlobalKey();
+  final LayerLink layerLink = LayerLink();
+  final GlobalKey _targetKey = GlobalKey();
+  static const int _maxVisibleOptions = 4;
+  late int _optionCount;
+  final _scrollController = ScrollController();
 
   @override
   void initState() {
     super.initState();
-    _selectedOptionId = widget.defaultOptionId;
-    _selectedOptionLabel = widget.options
-        .firstWhere((e) => e.id == _selectedOptionId)
-        .label;
+    _selectedValue = widget.defaultValue;
+    if (_selectedValue != null) {
+      _controller.text = widget.options
+          .firstWhere((e) => e.value == _selectedValue)
+          .label;
+    }
+    _optionCount = widget.options.length;
   }
 
-  void _onTap() {
-    // setState(() => _isOptionsSheetOpen = true);
+  @override
+  void dispose() {
+    _controller.dispose();
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  void _showDropdown() {
     _showOverlay();
   }
 
   void _showOverlay() {
-    final renderBox =
-        _priorityTargetKey.currentContext!.findRenderObject() as RenderBox;
-    final position = renderBox.localToGlobal(Offset.zero);
-    final size = renderBox.size;
-
-    final mediaQuery = MediaQuery.of(context);
-    final viewportHeight = mediaQuery.size.height;
-    final viewPadding = mediaQuery.viewPadding;
-    final bottomBarHeight = 56;
-    final spaceBelow =
-        viewportHeight -
-        position.dy -
-        size.height -
-        viewPadding.bottom -
-        bottomBarHeight;
-
-    final maxDropdownHeight = 48 * 4;
-    final openAbove = spaceBelow < maxDropdownHeight;
-
+    final layout = _computeOverlayLayout();
+    final optionHeight = layout.size.height;
+    final width = layout.size.width;
+    final anchor = layout.anchor;
     _overlayEntry = OverlayEntry(
       builder: (context) => Stack(
         children: [
@@ -77,54 +108,32 @@ class _CustomDropdownState extends State<CustomDropdown> {
             ),
           ),
           Positioned(
-            width: size.width,
+            width: width,
+            height: optionHeight * min(_maxVisibleOptions, _optionCount),
             child: CompositedTransformFollower(
-              targetAnchor: !openAbove
-                  ? Alignment.topLeft
-                  : Alignment.bottomRight,
-              followerAnchor: !openAbove
-                  ? Alignment.topLeft
-                  : Alignment.bottomRight,
-              link: priorityDropdownLayerLink,
+              link: layerLink,
+              targetAnchor: anchor,
+              followerAnchor: anchor,
               child: Material(
                 color: Theme.of(context).colorScheme.surface,
-
                 shape: AppDecorations.roundedBorderedRectangleBorder(
                   context,
                   AppDimens.borderRadiusSmall,
                 ),
                 clipBehavior: Clip.hardEdge,
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    ...widget.options.map(
-                      (e) => SizedBox(
-                        height: size.height,
-                        child: InkWell(
-                          onTap: () {
-                            setState(() {
-                              _selectedOptionId = e.id;
-                              _selectedOptionLabel = e.label;
-                              widget.onSelected(e.id);
-                            });
-                            _closeDropdown();
-                          },
-                          child: Container(
-                            padding: EdgeInsets.symmetric(
-                              horizontal: AppDimens.paddingMedium,
-                            ),
-                            child: Row(
-                              children: [
-                                Expanded(child: Text(e.label)),
-                                if (e.id == _selectedOptionId)
-                                  const Icon(Icons.check),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
+                child: SizedBox(
+                  height: optionHeight * min(_maxVisibleOptions, _optionCount),
+                  child: CustomScrollBar(
+                    controller: _scrollController,
+                    child: ListView.builder(
+                      controller: _scrollController,
+                      padding: EdgeInsets.zero,
+                      itemCount: _optionCount,
+                      itemExtent: optionHeight,
+                      itemBuilder: (context, index) =>
+                          _buildOption(widget.options[index], optionHeight),
                     ),
-                  ],
+                  ),
                 ),
               ),
             ),
@@ -140,29 +149,71 @@ class _CustomDropdownState extends State<CustomDropdown> {
     _overlayEntry = null;
   }
 
+  Widget _buildOption(Option option, double rowHeight) {
+    return Container(
+      height: rowHeight,
+      color: option.value == _selectedValue
+          ? Theme.of(context).colorScheme.primary.withValues(alpha: 0.8)
+          : null,
+      child: InkWell(
+        onTap: () {
+          setState(() => _selectedValue = option.value);
+          _controller.text = option.label;
+          widget.onSelected(option.value);
+          _closeDropdown();
+        },
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: AppDimens.paddingMedium),
+          child: Row(
+            children: [
+              Expanded(child: Text(option.label)),
+              if (option.value == _selectedValue) const Icon(Icons.check),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  _OverlayLayout _computeOverlayLayout() {
+    final renderBox =
+        _targetKey.currentContext!.findRenderObject() as RenderBox;
+    final size = renderBox.size;
+    final topLeft = renderBox.localToGlobal(Offset.zero);
+
+    final mediaQuery = MediaQuery.of(context);
+    final viewportHeight = mediaQuery.size.height;
+    final bottomPadding = mediaQuery.padding.bottom;
+    final spaceBelow =
+        viewportHeight -
+        topLeft.dy -
+        size.height -
+        bottomPadding -
+        widget.extraBottomSpace;
+
+    final dropdownHeight = size.height * min(_maxVisibleOptions, _optionCount);
+    final openAbove = spaceBelow < dropdownHeight;
+    final anchor = openAbove ? Alignment.bottomLeft : Alignment.topLeft;
+
+    return _OverlayLayout(anchor: anchor, size: size);
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Material(
-      color: Colors.transparent,
-      borderRadius: BorderRadius.circular(AppDimens.borderRadiusSmall),
-      clipBehavior: Clip.hardEdge,
-      child: InkWell(
-        onTap: _onTap,
-        key: _priorityTargetKey,
-        child: CompositedTransformTarget(
-          link: priorityDropdownLayerLink,
-          child: PaddedRoundedBorderedBox(
-            padding: EdgeInsets.symmetric(horizontal: AppDimens.paddingMedium),
-            borderRadius: AppDimens.borderRadiusSmall,
-
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Expanded(child: Text(_selectedOptionLabel)),
-                Icon(Icons.arrow_drop_down),
-              ],
-            ),
+    return CompositedTransformTarget(
+      key: _targetKey,
+      link: layerLink,
+      child: FormFieldWrapper(
+        childHasSuffixIcon: true,
+        childField: CustomTextFormField(
+          hintText: widget.hintText,
+          onTap: _showDropdown,
+          readOnly: true,
+          suffixIcon: FormIconButton(
+            iconData: widget.suffixIcon ?? Icons.arrow_drop_down,
+            onPressed: _showDropdown,
           ),
+          controller: _controller,
         ),
       ),
     );
