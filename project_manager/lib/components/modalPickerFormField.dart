@@ -6,16 +6,31 @@ import 'package:project_manager/components/modalBottomSheet.dart';
 import 'package:project_manager/models/option.dart';
 import 'package:project_manager/themes/dimens.dart';
 
+/// ModalPickerFormField is a form field that when clicked displays a modal bottom sheet for selecting an option from a list of options.
+///
+/// It uses [ModalBottomSheet] to display the modal bottom sheet and [CustomTextFormField] to display the text field.
+/// The controller is managed internally and is used to control the displayed text field.
+/// The value is stored in the [selectedValue] and exposed through the [onSelected] callback.
+///
+/// ## Parameters
+/// - (required) [options]: The list of options to display in the modal bottom sheet.
+/// - (required) [onSelected]: The callback function to call when an option is selected.
+/// - (optional) [initialValue]: The initial value to display in the text field.
+/// - (optional) [hintText]: The hint text of the form field when no option is selected.
+/// - (optional) [modalTitle]: The title of the modal bottom sheet.
+/// - (optional) [validator]: The validator function to validate the input.
+/// - (optional) [suffixIcon]: The icon to display in the suffix of the text field.
+
 class ModalPickerFormField extends StatefulWidget {
   const ModalPickerFormField({
     super.key,
-    this.modalTitle,
-    this.hintText,
-    this.initialValue,
     required this.options,
     required this.onSelected,
+    this.initialValue,
+    this.hintText,
     this.validator,
     this.suffixIcon,
+    this.modalTitle,
   });
 
   final String? modalTitle;
@@ -31,6 +46,9 @@ class ModalPickerFormField extends StatefulWidget {
 }
 
 class _ModalPickerFormFieldState extends State<ModalPickerFormField> {
+  late final Map<String, String> _valueToLabel = {
+    for (var o in widget.options) o.value: o.label,
+  };
   final _controller = TextEditingController();
   final _scrollController = ScrollController();
   String? _selectedValue;
@@ -40,9 +58,8 @@ class _ModalPickerFormFieldState extends State<ModalPickerFormField> {
     super.initState();
     _selectedValue = widget.initialValue;
     if (_selectedValue != null) {
-      _controller.text = widget.options
-          .firstWhere((e) => e.value == _selectedValue)
-          .label;
+      _controller.text = _valueToLabel[_selectedValue!] ?? '';
+      if (_controller.text.isEmpty) _selectedValue = null;
     }
   }
 
@@ -54,6 +71,12 @@ class _ModalPickerFormFieldState extends State<ModalPickerFormField> {
   }
 
   void _showPicker(BuildContext context) {
+    if (widget.options.isEmpty) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('No options available')));
+      return;
+    }
     ModelBottomSheet.show(
       context,
       widget.modalTitle,
@@ -121,7 +144,7 @@ class _PickerSheetContent extends StatelessWidget {
                 : null,
             child: ListTile(
               leading: Icon(
-                (option.icon ?? Icons.folder_outlined) as IconData?,
+                option.icon ?? Icons.folder_outlined,
                 color: Theme.of(context).colorScheme.outline,
               ),
               title: Text(

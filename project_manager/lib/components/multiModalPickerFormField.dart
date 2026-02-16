@@ -22,7 +22,7 @@ class MultiModalPickerFormField extends StatefulWidget {
   final String? hintText;
   final List<Option> options;
   final List<String> initialValues;
-  final ValueChanged<String> onSelected;
+  final ValueChanged<List<String>> onSelected;
   final String? Function(String?)? validator;
   final IconData? suffixIcon;
 
@@ -35,17 +35,25 @@ class _MultiModalPickerFormFieldState extends State<MultiModalPickerFormField> {
   final _controller = TextEditingController();
   final _scrollController = ScrollController();
   late List<String> _selectedValues;
+  late final Map<String, String> _valueToLabel = {
+    for (var o in widget.options) o.value: o.label,
+  };
 
   @override
   void initState() {
     super.initState();
-    _selectedValues = widget.initialValues;
+    _selectedValues = List.from(widget.initialValues);
+
     if (_selectedValues.isNotEmpty) {
-      _controller.text = widget.options
-          .where((e) => _selectedValues.contains(e.value))
-          .map((e) => e.label)
-          .join(', ');
+      _updateControllerText();
     }
+  }
+
+  void _updateControllerText() {
+    _controller.text = _selectedValues
+        .map((v) => '#${_valueToLabel[v] ?? ''}')
+        .join(', ');
+    _controller.selection = TextSelection.fromPosition(TextPosition(offset: 0));
   }
 
   @override
@@ -61,10 +69,13 @@ class _MultiModalPickerFormFieldState extends State<MultiModalPickerFormField> {
       widget.modalTitle,
       _PickerSheetContent(
         options: widget.options,
-        selectedValues: _selectedValues,
-        onSelected: (value) {
+        initialValues: _selectedValues,
+        onChange: (value) {
+          setState(() {
+            _selectedValues = value;
+            _updateControllerText();
+          });
           widget.onSelected(value);
-          setState(() => _selectedValues = [..._selectedValues, value]);
         },
         controller: _controller,
         scrollController: _scrollController,
@@ -91,31 +102,54 @@ class _MultiModalPickerFormFieldState extends State<MultiModalPickerFormField> {
   }
 }
 
-class _PickerSheetContent extends StatelessWidget {
+class _PickerSheetContent extends StatefulWidget {
   const _PickerSheetContent({
     required this.options,
-    required this.selectedValues,
-    required this.onSelected,
+    required this.initialValues,
+    required this.onChange,
     required this.controller,
     required this.scrollController,
   });
 
   final List<Option> options;
-  final List<String> selectedValues;
-  final ValueChanged<String> onSelected;
+  final List<String> initialValues;
+  final ValueChanged<List<String>> onChange;
   final TextEditingController controller;
   final ScrollController scrollController;
 
   @override
+  State<_PickerSheetContent> createState() => __PickerSheetContentState();
+}
+
+class __PickerSheetContentState extends State<_PickerSheetContent> {
+  late List<String> _selectedValues;
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedValues = List.from(widget.initialValues);
+  }
+
+  void _toggleSelection(String value) {
+    setState(() {
+      if (_selectedValues.contains(value)) {
+        _selectedValues.remove(value);
+      } else {
+        _selectedValues.add(value);
+      }
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return CustomScrollBar(
-      controller: scrollController,
+      controller: widget.scrollController,
       child: ListView.builder(
-        controller: scrollController,
-        itemCount: options.length,
+        controller: widget.scrollController,
+        itemCount: widget.options.length,
         itemBuilder: (context, index) {
-          final option = options[index];
-          final isSelected = selectedValues.contains(option.value);
+          final option = widget.options[index];
+          final isSelected = _selectedValues.contains(option.value);
 
           return Container(
             color: isSelected
@@ -139,8 +173,8 @@ class _PickerSheetContent extends StatelessWidget {
               horizontalTitleGap: AppDimens.spacingMedium,
               minLeadingWidth: 0,
               onTap: () {
-                controller.text += ', $option.label';
-                onSelected(option.value);
+                _toggleSelection(option.value);
+                widget.onChange(_selectedValues);
               },
             ),
           );

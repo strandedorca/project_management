@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:project_manager/app/dependencies.dart';
-import 'package:project_manager/components/categoryPickerFormField.dart';
 import 'package:project_manager/components/customDropdown.dart';
 import 'package:project_manager/components/customTextFormField.dart';
 import 'package:project_manager/components/datePickerFormField.dart';
+import 'package:project_manager/components/modalPickerFormField.dart';
 import 'package:project_manager/components/optionSwitcher.dart';
 import 'package:project_manager/components/paddedRoundedBorderedBox.dart';
 import 'package:project_manager/components/tagPicker.dart';

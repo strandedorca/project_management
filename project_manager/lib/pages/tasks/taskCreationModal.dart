@@ -10,6 +10,7 @@ import 'package:project_manager/components/modalPickerFormField.dart';
 import 'package:project_manager/components/multiModalPickerFormField.dart';
 import 'package:project_manager/models/option.dart';
 import 'package:project_manager/models/priority_level.dart';
+import 'package:project_manager/pages/create_project/projectCreation.dart';
 import 'package:project_manager/pages/tasks/taskCreationModel.dart';
 import 'package:project_manager/themes/dimens.dart';
 
@@ -25,7 +26,10 @@ class TaskCreationModal extends StatefulWidget {
         padding: EdgeInsets.zero,
         visualDensity: VisualDensity.compact,
         icon: Icon(Icons.open_in_new),
-        onPressed: () => print('open in new tab pressed'),
+        onPressed: () => Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => ProjectCreation()),
+        ),
       ),
     );
   }
@@ -39,10 +43,10 @@ class _TaskCreationModalState extends State<TaskCreationModal> {
   final _data = TaskCreationModel();
   bool _loading = false;
   // TODO: Categories are just parent projects
-  late List<Option> _categoryOptions;
+  late List<Option> _categoryOptions = [];
   String? _selectedCategoryId;
   DateTime? _selectedDate;
-  late List<Option> _tagOptions;
+  late List<Option> _tagOptions = [];
   List<String> _selectedTagValues = [];
   String? _selectedPriorityValue;
   final List<Option> _priorityOptions = PriorityLevel.values
@@ -207,8 +211,9 @@ class _TaskCreationModalState extends State<TaskCreationModal> {
                       modalTitle: 'Select Tags',
                       onSelected: (value) {
                         setState(() {
-                          _selectedTagValues.add(value);
+                          _selectedTagValues = value;
                         });
+                        _data.tags = value;
                       },
                       options: _tagOptions,
                       initialValues: _selectedTagValues,
@@ -217,6 +222,7 @@ class _TaskCreationModalState extends State<TaskCreationModal> {
                     childHasSuffixIcon: true,
                   ),
                 ),
+
                 const SizedBox(width: AppDimens.spacingMedium),
                 Expanded(
                   child: FormFieldWrapper(
