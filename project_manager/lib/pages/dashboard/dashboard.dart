@@ -61,18 +61,6 @@ class _DashboardState extends State<Dashboard> {
               ),
             ),
           ),
-          // floatingActionButton: FloatingActionButton(
-          //   onPressed: () {
-          //     Navigator.push(
-          //       context,
-          //       MaterialPageRoute(builder: (context) => ProjectCreation()),
-          //     );
-          //   },
-          //   elevation: 0,
-          //   backgroundColor: Theme.of(context).colorScheme.primary,
-          //   shape: AppDecorations.roundedBorderedRectangleBorder(context, 999),
-          //   child: Icon(Icons.add),
-          // ),
         ),
       ),
     );
