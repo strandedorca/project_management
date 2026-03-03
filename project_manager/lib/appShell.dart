@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:project_manager/components/customBottomNavBar.dart';
 import 'package:project_manager/components/customFAB.dart';
 import 'package:project_manager/pages/activities/activities.dart';
-import 'package:project_manager/pages/create_project/projectCreation.dart';
 import 'package:project_manager/pages/dashboard/dashboard.dart';
+import 'package:project_manager/pages/projects/projectCreationModal.dart';
 import 'package:project_manager/pages/projects/projectList.dart';
 import 'package:project_manager/pages/search/search.dart';
 import 'package:project_manager/pages/settings/settings.dart';
@@ -56,7 +56,6 @@ class _AppShellState extends State<AppShell> {
         icon: Icons.check_circle_outline,
         label: 'New task',
         onTap: () {
-          // TODO: Add logic to handle the tap
           TaskCreationModal.showModal(context);
         },
       ),
@@ -64,14 +63,11 @@ class _AppShellState extends State<AppShell> {
         icon: Icons.folder_open_rounded,
         label: 'New project',
         onTap: () {
-          // TODO: Add logic to handle the tap
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => ProjectCreation()),
-          );
+          ProjectCreationModal.showModal(context);
         },
       ),
     ];
+
     return Container(
       color: Theme.of(context).colorScheme.surface,
       child: SafeArea(

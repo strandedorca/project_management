@@ -7,72 +7,52 @@ import 'package:project_manager/components/datePickerFormField.dart';
 import 'package:project_manager/components/formFieldWrapper.dart';
 import 'package:project_manager/components/modalBottomSheet.dart';
 import 'package:project_manager/components/modalPickerFormField.dart';
-import 'package:project_manager/components/multiModalPickerFormField.dart';
 import 'package:project_manager/models/option.dart';
 import 'package:project_manager/models/priority_level.dart';
-import 'package:project_manager/pages/tasks/taskCreationModel.dart';
+import 'package:project_manager/pages/projects/projectCreationModel.dart';
 import 'package:project_manager/themes/dimens.dart';
 
-class TaskCreationModal extends StatefulWidget {
-  const TaskCreationModal({super.key});
+class ProjectCreationModal extends StatefulWidget {
+  const ProjectCreationModal({super.key});
 
   static void showModal(BuildContext context) {
-    ModelBottomSheet.show(
-      context,
-      'New Task',
-      TaskCreationModal(),
-      // actionIcon: IconButton(
-      //   padding: EdgeInsets.zero,
-      //   visualDensity: VisualDensity.compact,
-      //   icon: Icon(Icons.open_in_new),
-      //   onPressed: () => Navigator.push(
-      //     context,
-      //     MaterialPageRoute(builder: (context) => ProjectCreation()),
-      //   ),
-      // ),
-    );
+    ModelBottomSheet.show(context, 'New Project', ProjectCreationModal());
   }
 
   @override
-  State<TaskCreationModal> createState() => _TaskCreationModalState();
+  State<ProjectCreationModal> createState() => _ProjectCreationModalState();
 }
 
-class _TaskCreationModalState extends State<TaskCreationModal> {
+class _ProjectCreationModalState extends State<ProjectCreationModal> {
   final _formKey = GlobalKey<FormState>();
-  final _data = TaskCreationModel();
+  final _data = ProjectCreationModel();
   bool _loading = false;
-  // TODO: Categories are just parent projects
-  late List<Option> _projectOptions = [];
-  String? _selectedProjectId;
+
+  late List<Option> _categoryOptions = [];
+  String? _selectedCategoryId;
   DateTime? _selectedDate;
-  late List<Option> _tagOptions = [];
-  List<String> _selectedTagValues = [];
   String? _selectedPriorityValue;
   final List<Option> _priorityOptions = PriorityLevel.values
       .map((e) => Option.fromValues(e.value, e.label, null))
       .toList();
+  String? _selectedStatusValue;
+  final List<Option> _statusOptions = [
+    Option.fromValues('not_started', 'Not Started', Icons.check_circle_outline),
+    Option.fromValues('in_progress', 'In Progress', Icons.check_circle_outline),
+    Option.fromValues('completed', 'Completed', Icons.check_circle_outline),
+  ];
 
   @override
   void initState() {
     super.initState();
-    _fetchProjects();
-    _fetchTags();
+    _fetchCategories();
   }
 
-  void _fetchProjects() {
-    final projects = projectService.getAllProjects();
+  void _fetchCategories() {
+    final categories = categoryService.getAllCategories();
     setState(() {
-      _projectOptions = projects
+      _categoryOptions = categories
           .map((e) => Option.fromValues(e.id, e.name, Icons.folder_outlined))
-          .toList();
-    });
-  }
-
-  void _fetchTags() {
-    final tags = tagService.getAllTags();
-    setState(() {
-      _tagOptions = tags
-          .map((e) => Option.fromValues(e.id, e.name, Icons.label_outlined))
           .toList();
     });
   }
@@ -96,10 +76,10 @@ class _TaskCreationModalState extends State<TaskCreationModal> {
       await Future.delayed(Duration(seconds: 1)); // fake API
       print(_data.name);
       print(_data.description);
-      print(_data.projectId);
+      print(_data.categoryId);
       print(_data.deadline);
       print(_data.priority);
-      print(_data.tags);
+      print(_data.status);
     } finally {
       setState(() => _loading = false);
     }
@@ -133,12 +113,12 @@ class _TaskCreationModalState extends State<TaskCreationModal> {
                   child: FormFieldWrapper(
                     childField: ModalPickerFormField(
                       suffixIcon: Icons.folder_outlined,
-                      modalTitle: 'Select Project',
-                      hintText: 'Project',
-                      options: _projectOptions,
-                      initialValue: _selectedProjectId,
+                      modalTitle: 'Select Category',
+                      hintText: 'Category',
+                      options: _categoryOptions,
+                      initialValue: _selectedCategoryId,
                       onSelected: (value) {
-                        _data.projectId = value;
+                        _data.categoryId = value;
                       },
                     ),
                     childHasSuffixIcon: true,
@@ -183,50 +163,18 @@ class _TaskCreationModalState extends State<TaskCreationModal> {
                   ),
                 ),
                 const SizedBox(width: AppDimens.spacingMedium),
-                // TODO: add a reminder picker form field
                 Expanded(
-                  child: FormFieldWrapper(
-                    childField: CustomTextFormField(
-                      hintText: 'Reminder',
-                      onTap: () => print('reminder shown'),
-                      readOnly: true,
-                    ),
-                    suffixIcon: Icons.access_alarm_outlined,
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: AppDimens.spacingMedium),
-            Row(
-              children: [
-                Expanded(
-                  child: FormFieldWrapper(
-                    childField: MultiModalPickerFormField(
-                      hintText: 'Tags',
-                      modalTitle: 'Select Tags',
-                      onSelected: (value) {
-                        setState(() {
-                          _selectedTagValues = value;
-                        });
-                        _data.tags = value;
-                      },
-                      options: _tagOptions,
-                      initialValues: _selectedTagValues,
-                      suffixIcon: Icons.label_outlined,
-                    ),
-                    childHasSuffixIcon: true,
-                  ),
-                ),
-
-                const SizedBox(width: AppDimens.spacingMedium),
-                Expanded(
-                  child: FormFieldWrapper(
-                    childField: CustomTextFormField(
-                      hintText: 'Date',
-                      onTap: () => print('date picker shown'),
-                      readOnly: true,
-                    ),
-                    suffixIcon: Icons.calendar_month_outlined,
+                  child: CustomDropdown(
+                    hintText: 'Status',
+                    initialValue: _selectedStatusValue,
+                    options: _statusOptions,
+                    onSelected: (value) {
+                      setState(() {
+                        _selectedStatusValue = value;
+                        _data.status = value;
+                      });
+                    },
+                    suffixIcon: Icons.check_circle_outline,
                   ),
                 ),
               ],

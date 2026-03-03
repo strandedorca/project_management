@@ -84,10 +84,10 @@ class _ModalPickerFormFieldState extends State<ModalPickerFormField> {
         options: widget.options,
         selectedValue: _selectedValue,
         onSelected: (value) {
+          _controller.text = _valueToLabel[value] ?? '';
           widget.onSelected(value);
           setState(() => _selectedValue = value);
         },
-        controller: _controller,
         scrollController: _scrollController,
       ),
     );
@@ -117,14 +117,12 @@ class _PickerSheetContent extends StatelessWidget {
     required this.options,
     required this.selectedValue,
     required this.onSelected,
-    required this.controller,
     required this.scrollController,
   });
 
   final List<Option> options;
   final String? selectedValue;
   final ValueChanged<String> onSelected;
-  final TextEditingController controller;
   final ScrollController scrollController;
 
   @override
@@ -160,8 +158,6 @@ class _PickerSheetContent extends StatelessWidget {
               horizontalTitleGap: AppDimens.spacingMedium,
               minLeadingWidth: 0,
               onTap: () {
-                controller.text = option.label;
-
                 onSelected(option.value);
                 Navigator.pop(context);
               },

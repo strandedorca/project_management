@@ -14,6 +14,7 @@ import 'package:project_manager/data/services/task_service.dart';
 final projectRepository = InMemoryProjectRepository();
 final taskRepository = InMemoryTaskRepository();
 final categoryRepository = InMemoryCategoryRepository();
+
 final tagRepository = InMemoryTagRepository();
 
 final projectService = ProjectService(projectRepository);
