@@ -7,11 +7,11 @@ import 'package:project_manager/components/modalPickerFormField.dart';
 import 'package:project_manager/components/optionSwitcher.dart';
 import 'package:project_manager/components/paddedRoundedBorderedBox.dart';
 import 'package:project_manager/components/tagPicker.dart';
-import 'package:project_manager/models/category.dart';
-import 'package:project_manager/models/importance_mode.dart';
-import 'package:project_manager/models/option.dart';
-import 'package:project_manager/models/priority_level.dart';
-import 'package:project_manager/models/tag.dart';
+import 'package:project_manager/data/models/category.dart';
+import 'package:project_manager/data/models/importance_mode.dart';
+import 'package:project_manager/data/models/option.dart';
+import 'package:project_manager/data/models/priority_level.dart';
+import 'package:project_manager/data/models/tag.dart';
 import 'package:project_manager/pages/create_project/projectCreationFormField.dart';
 import 'package:project_manager/themes/dimens.dart';
 

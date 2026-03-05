@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:project_manager/components/modalBottomSheet.dart';
-import 'package:project_manager/models/tag.dart';
+import 'package:project_manager/data/models/tag.dart';
 import 'package:project_manager/themes/decorations.dart';
 import 'package:project_manager/themes/dimens.dart';
 

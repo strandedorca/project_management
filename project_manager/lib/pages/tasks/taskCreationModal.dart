@@ -8,8 +8,8 @@ import 'package:project_manager/components/formFieldWrapper.dart';
 import 'package:project_manager/components/modalBottomSheet.dart';
 import 'package:project_manager/components/modalPickerFormField.dart';
 import 'package:project_manager/components/multiModalPickerFormField.dart';
-import 'package:project_manager/models/option.dart';
-import 'package:project_manager/models/priority_level.dart';
+import 'package:project_manager/data/models/option.dart';
+import 'package:project_manager/data/models/priority_level.dart';
 import 'package:project_manager/pages/tasks/taskCreationModel.dart';
 import 'package:project_manager/themes/dimens.dart';
 

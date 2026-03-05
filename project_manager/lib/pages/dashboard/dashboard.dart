@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:project_manager/models/user.dart';
+import 'package:project_manager/data/models/user.dart';
+import 'package:project_manager/data/services/user_service.dart';
 import 'package:project_manager/pages/dashboard/dashboardAppbar.dart';
 import 'package:project_manager/pages/dashboard/deadlines.dart';
 import 'package:project_manager/pages/dashboard/dueTasks.dart';
 import 'package:project_manager/pages/dashboard/projects.dart';
 import 'package:project_manager/pages/dashboard/section.dart';
-import 'package:project_manager/services/user_service.dart';
 import 'package:project_manager/themes/dimens.dart';
 
 class Dashboard extends StatefulWidget {

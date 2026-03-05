@@ -1,5 +1,5 @@
+import 'package:project_manager/data/models/project.dart';
 import 'package:project_manager/data/repositories/project_repository.dart';
-import 'package:project_manager/models/project.dart';
 
 /// **How it works:**
 /// - Stores projects in a List (just like `List<Project> projects = []`)
@@ -30,16 +30,15 @@ class InMemoryProjectRepository implements ProjectRepository {
   /// **In real database:** Would generate ID, handle conflicts, etc.
   @override
   Project create(Project project) {
+    print(project.toJson());
     _projects.add(project);
     return project; // Return the project we just added
   }
 
   /// Update existing project
-
   /// 1. Find the index of the project with matching ID
   /// 2. Replace it with the updated project
   /// 3. If not found, throw an error
-
   @override
   Project update(Project updatedProject) {
     final index = _projects.indexWhere((p) => p.id == updatedProject.id);

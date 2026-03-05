@@ -1,4 +1,4 @@
-import 'package:project_manager/models/task.dart';
+import 'package:project_manager/data/models/task.dart';
 
 // This list contains tasks with deadlines only (if it has no deadline, it is not included)
 

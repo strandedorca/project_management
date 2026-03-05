@@ -1,4 +1,4 @@
-import 'package:project_manager/models/category.dart';
+import 'package:project_manager/data/models/category.dart';
 
 abstract class CategoryRepository {
   List<Category> getAll();

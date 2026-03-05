@@ -1,4 +1,4 @@
-import 'package:project_manager/models/project.dart';
+import 'package:project_manager/data/models/project.dart';
 
 /// Abstract interface for project storage
 ///

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:project_manager/data/models/project.dart';
 import 'package:project_manager/data/sample_upcoming_deadline.dart';
-import 'package:project_manager/models/project.dart';
 import 'package:project_manager/themes/colors.dart';
 import 'package:project_manager/themes/dimens.dart';
 import 'package:project_manager/utils/date_formatter.dart';
@@ -77,7 +77,9 @@ class _DeadlineCard extends StatelessWidget {
                 child: Align(
                   alignment: Alignment.bottomLeft,
                   child: Text(
-                    DateFormatter.shortDate(project.deadline),
+                    project.deadline != null
+                        ? DateFormatter.shortDate(project.deadline!)
+                        : 'No deadline',
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
                       color: AppColors.textSecondary,
                     ),

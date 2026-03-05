@@ -1,44 +1,54 @@
 // Project model
+import 'package:project_manager/data/models/priority_level.dart';
+import 'package:project_manager/data/models/status.dart';
+
 class Project {
   // All properties
   final String id;
+
   final String name;
   final String? description; // Made nullable since it's optional
-
+  final DateTime? deadline;
   final String categoryId;
-  final List<String>? tags;
-  final String? type;
   final ProjectStatus status;
-
-  final DateTime startDate;
-  final DateTime endDate;
-
-  final double progress;
-  final double weight;
-
-  final String color;
-
-  final DateTime deadline;
+  final PriorityLevel priority;
+  final List<String>? tags;
 
   final DateTime updatedAt;
+
+  // final String? type;
+  // final DateTime startDate;
+  // final DateTime endDate;
+  // final double progress;
+  // final double weight;
+  // final String color;
 
   // Constructor
   const Project({
     required this.id,
     required this.name,
     this.description,
+    this.deadline,
     required this.categoryId,
-    this.type,
-    this.tags,
     required this.status,
-    required this.startDate,
-    required this.endDate,
-    required this.progress,
-    required this.weight,
-    required this.color,
-    required this.deadline,
+    required this.priority,
+    this.tags,
     required this.updatedAt,
   });
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'name': name,
+      'description': description,
+      'deadline': deadline?.toIso8601String(),
+      'categoryId': categoryId,
+      'status': status.value,
+      'priority': priority.value,
+      'tags': tags,
+      'updatedAt': updatedAt,
+    };
+  }
 
   // int get progressPercentage => int.parse(progress);
   // int get progressPercentage => (progress * 100).round();
@@ -48,15 +58,4 @@ class Project {
 
   // Get days until deadline (negative if overdue)
   // int get daysUntilDeadline => deadline.difference(DateTime.now()).inDays;
-}
-
-// Project status enum
-enum ProjectStatus {
-  ongoing('Ongoing'),
-  notStarted('Not Started'),
-  completed('Completed');
-
-  final String label;
-
-  const ProjectStatus(this.label);
 }

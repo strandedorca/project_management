@@ -1,5 +1,5 @@
+import 'package:project_manager/data/models/category.dart';
 import 'package:project_manager/data/repositories/category_repository.dart';
-import 'package:project_manager/models/category.dart';
 
 class CategoryService {
   final CategoryRepository _repository;

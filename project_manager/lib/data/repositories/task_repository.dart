@@ -1,4 +1,4 @@
-import 'package:project_manager/models/task.dart';
+import 'package:project_manager/data/models/task.dart';
 
 /// Abstract interface for task storage
 ///

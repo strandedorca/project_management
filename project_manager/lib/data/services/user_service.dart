@@ -1,4 +1,4 @@
-import 'package:project_manager/models/user.dart';
+import 'package:project_manager/data/models/user.dart';
 
 /// Service to manage current user data
 ///

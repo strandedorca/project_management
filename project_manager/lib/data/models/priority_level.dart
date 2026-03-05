@@ -1,8 +1,8 @@
 enum PriorityLevel {
-  no('0', 'No Priority'),
-  low('1', 'Low'),
-  medium('2', 'Medium'),
-  high('3', 'High');
+  no('no_priority', 'No Priority'),
+  low('low_priority', 'Low'),
+  medium('medium_priority', 'Medium'),
+  high('high_priority', 'High');
 
   final String value;
   final String label;

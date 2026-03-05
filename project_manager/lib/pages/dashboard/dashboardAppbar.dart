@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:project_manager/components/customAppbar.dart';
-import 'package:project_manager/models/user.dart';
+import 'package:project_manager/data/models/user.dart';
 
 // A custom app bar with avatar, greeting and settings icon.
 // Implements PreferredSizeWidget to ensure the app bar works with Scaffold.

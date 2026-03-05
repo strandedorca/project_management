@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:project_manager/components/checkbox.dart';
+import 'package:project_manager/data/models/task.dart';
 import 'package:project_manager/data/sample_due_tasks.dart';
-import 'package:project_manager/models/task.dart';
 import 'package:project_manager/themes/decorations.dart';
 import 'package:project_manager/themes/dimens.dart';
 import 'package:project_manager/utils/date_formatter.dart';

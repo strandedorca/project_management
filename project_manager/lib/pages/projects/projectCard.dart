@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:project_manager/components/customChip.dart';
-import 'package:project_manager/models/project.dart';
-import 'package:project_manager/pages/dashboard/projectCardProgress.dart';
+import 'package:project_manager/data/models/project.dart';
 import 'package:project_manager/themes/dimens.dart';
 import 'package:project_manager/utils/date_formatter.dart';
 import 'package:project_manager/utils/number_formatter.dart';
@@ -83,22 +82,24 @@ class ProjectCard extends StatelessWidget {
                         ).createShader(rect),
                       ),
                     ),
-                    SizedBox(width: AppDimens.spacingSmall),
-                    _SingleRadialChart(percentage: project.weight, size: 30),
+                    // SizedBox(width: AppDimens.spacingSmall),
+                    // _SingleRadialChart(percentage: project.weight, size: 30),
                   ],
                 ),
 
                 // Progress
-                CardProjectProgress(progress: project.progress),
+                // CardProjectProgress(progress: project.progress),
 
                 // Deadline
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: Text(
-                    DateFormatter.shortDate(project.deadline),
-                    style: Theme.of(context).textTheme.bodySmall,
-                  ),
-                ),
+                project.deadline != null
+                    ? Align(
+                        alignment: Alignment.centerRight,
+                        child: Text(
+                          DateFormatter.shortDate(project.deadline!),
+                          style: Theme.of(context).textTheme.bodySmall,
+                        ),
+                      )
+                    : SizedBox.shrink(),
               ],
             ),
           ),

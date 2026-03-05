@@ -1,4 +1,4 @@
-import 'package:project_manager/models/tag.dart';
+import 'package:project_manager/data/models/tag.dart';
 
 abstract class TagRepository {
   List<Tag> getAll();

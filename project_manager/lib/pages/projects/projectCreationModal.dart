@@ -7,8 +7,10 @@ import 'package:project_manager/components/datePickerFormField.dart';
 import 'package:project_manager/components/formFieldWrapper.dart';
 import 'package:project_manager/components/modalBottomSheet.dart';
 import 'package:project_manager/components/modalPickerFormField.dart';
-import 'package:project_manager/models/option.dart';
-import 'package:project_manager/models/priority_level.dart';
+import 'package:project_manager/components/multiModalPickerFormField.dart';
+import 'package:project_manager/data/models/option.dart';
+import 'package:project_manager/data/models/priority_level.dart';
+import 'package:project_manager/data/models/status.dart';
 import 'package:project_manager/pages/projects/projectCreationModel.dart';
 import 'package:project_manager/themes/dimens.dart';
 
@@ -29,23 +31,19 @@ class _ProjectCreationModalState extends State<ProjectCreationModal> {
   bool _loading = false;
 
   late List<Option> _categoryOptions = [];
-  String? _selectedCategoryId;
-  DateTime? _selectedDate;
-  String? _selectedPriorityValue;
   final List<Option> _priorityOptions = PriorityLevel.values
       .map((e) => Option.fromValues(e.value, e.label, null))
       .toList();
-  String? _selectedStatusValue;
-  final List<Option> _statusOptions = [
-    Option.fromValues('not_started', 'Not Started', Icons.check_circle_outline),
-    Option.fromValues('in_progress', 'In Progress', Icons.check_circle_outline),
-    Option.fromValues('completed', 'Completed', Icons.check_circle_outline),
-  ];
+  final List<Option> _statusOptions = ProjectStatus.values
+      .map((e) => Option.fromValues(e.value, e.label, null))
+      .toList();
+  late List<Option> _tagOptions = [];
 
   @override
   void initState() {
     super.initState();
     _fetchCategories();
+    _fetchTags();
   }
 
   void _fetchCategories() {
@@ -53,6 +51,15 @@ class _ProjectCreationModalState extends State<ProjectCreationModal> {
     setState(() {
       _categoryOptions = categories
           .map((e) => Option.fromValues(e.id, e.name, Icons.folder_outlined))
+          .toList();
+    });
+  }
+
+  void _fetchTags() {
+    final tags = tagService.getAllTags();
+    setState(() {
+      _tagOptions = tags
+          .map((e) => Option.fromValues(e.id, e.name, Icons.tag_outlined))
           .toList();
     });
   }
@@ -67,19 +74,19 @@ class _ProjectCreationModalState extends State<ProjectCreationModal> {
 
   Future<void> _handleSubmit() async {
     if (!_formKey.currentState!.validate()) return;
-    _formKey.currentState!.save();
-    print('Form is valid! Creating task...');
-
+    _formKey.currentState!.save(); // onSaved callback
     setState(() => _loading = true);
 
     try {
       await Future.delayed(Duration(seconds: 1)); // fake API
-      print(_data.name);
-      print(_data.description);
-      print(_data.categoryId);
-      print(_data.deadline);
-      print(_data.priority);
-      print(_data.status);
+      projectService.createProject(
+        name: _data.name!,
+        description: _data.description,
+        deadline: _data.deadline,
+        priority: _data.priority,
+        status: _data.status,
+        tags: _data.tags,
+      );
     } finally {
       setState(() => _loading = false);
     }
@@ -116,7 +123,7 @@ class _ProjectCreationModalState extends State<ProjectCreationModal> {
                       modalTitle: 'Select Category',
                       hintText: 'Category',
                       options: _categoryOptions,
-                      initialValue: _selectedCategoryId,
+                      initialValue: _data.categoryId,
                       onSelected: (value) {
                         _data.categoryId = value;
                       },
@@ -129,15 +136,12 @@ class _ProjectCreationModalState extends State<ProjectCreationModal> {
                   child: FormFieldWrapper(
                     childField: DeadlinePickerFormField(
                       controller: _deadlineController,
-                      value: _selectedDate,
+                      value: _data.deadline,
                       onDateSelected: (date) {
-                        setState(() => _selectedDate = date);
-                        _data.deadline = date;
+                        setState(() => _data.deadline = date);
                       },
                       onClear: () {
-                        setState(() {
-                          _selectedDate = null;
-                        });
+                        setState(() => _data.deadline = null);
                       },
                     ),
                     childHasSuffixIcon: true,
@@ -149,35 +153,56 @@ class _ProjectCreationModalState extends State<ProjectCreationModal> {
             Row(
               children: [
                 Expanded(
-                  child: CustomDropdown(
-                    hintText: 'Priority',
-                    initialValue: _selectedPriorityValue,
-                    options: _priorityOptions,
-                    onSelected: (value) {
-                      setState(() {
-                        _selectedPriorityValue = value;
-                        _data.priority = value;
-                      });
-                    },
-                    suffixIcon: Icons.flag_outlined,
+                  child: FormFieldWrapper(
+                    childHasSuffixIcon: true,
+                    childField: CustomDropdown(
+                      hintText: 'Priority',
+                      initialValue: _data.priority?.value,
+                      options: _priorityOptions,
+                      onSelected: (value) {
+                        setState(() {
+                          _data.priority = PriorityLevel.values.firstWhere(
+                            (e) => e.value == value,
+                          );
+                        });
+                      },
+                      suffixIcon: Icons.flag_outlined,
+                    ),
                   ),
                 ),
                 const SizedBox(width: AppDimens.spacingMedium),
                 Expanded(
-                  child: CustomDropdown(
-                    hintText: 'Status',
-                    initialValue: _selectedStatusValue,
-                    options: _statusOptions,
-                    onSelected: (value) {
-                      setState(() {
-                        _selectedStatusValue = value;
-                        _data.status = value;
-                      });
-                    },
-                    suffixIcon: Icons.check_circle_outline,
+                  child: FormFieldWrapper(
+                    childHasSuffixIcon: true,
+                    childField: CustomDropdown(
+                      hintText: 'Status',
+                      initialValue: _data.status?.value,
+                      options: _statusOptions,
+                      onSelected: (value) {
+                        setState(
+                          () => _data.status = ProjectStatus.values.firstWhere(
+                            (e) => e.value == value,
+                          ),
+                        );
+                      },
+                      suffixIcon: Icons.check_circle_outline,
+                    ),
                   ),
                 ),
               ],
+            ),
+            const SizedBox(height: AppDimens.spacingMedium),
+            FormFieldWrapper(
+              childField: MultiModalPickerFormField(
+                hintText: 'Tags',
+                modalTitle: 'Select Tags',
+                onSelected: (values) {
+                  setState(() => _data.tags = values);
+                },
+                options: _tagOptions,
+                initialValues: _data.tags ?? [],
+                suffixIcon: Icons.label_outlined,
+              ),
             ),
             const SizedBox(height: AppDimens.spacingMedium),
             Button(

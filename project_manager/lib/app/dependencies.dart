@@ -9,13 +9,13 @@ import 'package:project_manager/data/services/task_service.dart';
 
 /// Global instances - shared across the app.
 /// Any file that imports this file can use [projectService], [categoryService], etc.
-/// Example: in a page, add `import 'package:project_manager/app/dependencies.dart';`
-/// then call `projectService.createProject(...)` or `categoryService.getAllCategories()`.
+// Create the repositories
 final projectRepository = InMemoryProjectRepository();
 final taskRepository = InMemoryTaskRepository();
 final categoryRepository = InMemoryCategoryRepository();
 final tagRepository = InMemoryTagRepository();
 
+// Inject the repositories into the services
 final projectService = ProjectService(projectRepository);
 final taskService = TaskService(taskRepository);
 final categoryService = CategoryService(categoryRepository);

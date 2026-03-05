@@ -3,7 +3,7 @@ import 'package:project_manager/components/customScrollBar.dart';
 import 'package:project_manager/components/customTextFormField.dart';
 import 'package:project_manager/components/formIconButton.dart';
 import 'package:project_manager/components/modalBottomSheet.dart';
-import 'package:project_manager/models/option.dart';
+import 'package:project_manager/data/models/option.dart';
 import 'package:project_manager/themes/dimens.dart';
 
 class MultiModalPickerFormField extends StatefulWidget {

@@ -1,4 +1,6 @@
-import 'package:project_manager/models/project.dart';
+import 'package:project_manager/data/models/priority_level.dart';
+import 'package:project_manager/data/models/project.dart';
+import 'package:project_manager/data/models/status.dart';
 
 // Sample data
 // TODO: Replace with actual data from the database/API/state management
@@ -8,13 +10,8 @@ final List<Project> sampleProjects = [
     name: 'Conceptual Modelling',
     description: 'Description 1',
     categoryId: '1',
-    type: 'Type 1',
-    status: ProjectStatus.ongoing,
-    startDate: DateTime.parse('2024-01-01'),
-    endDate: DateTime.parse('2024-01-01'),
-    progress: 80.23,
-    weight: 40,
-    color: '0',
+    status: ProjectStatus.onGoing,
+    priority: PriorityLevel.no,
     deadline: DateTime.now(),
     tags: ['COMP1000', 'Group Project'],
     updatedAt: DateTime.now(),
@@ -24,13 +21,8 @@ final List<Project> sampleProjects = [
     name: 'Renaissance Period Essay',
     description: 'Description 2',
     categoryId: '2',
-    type: 'Type 2',
     status: ProjectStatus.notStarted,
-    startDate: DateTime.parse('2024-01-01'),
-    endDate: DateTime.parse('2024-01-01'),
-    progress: 46.40,
-    weight: 40,
-    color: '0',
+    priority: PriorityLevel.no,
     deadline: DateTime.now(),
     tags: ['HIST2088', 'Essay', 'Personal', 'Hurdle'],
     updatedAt: DateTime.now(),
@@ -40,13 +32,8 @@ final List<Project> sampleProjects = [
     name: 'Standardisation',
     description: 'Description 3',
     categoryId: '3',
-    type: '3',
     status: ProjectStatus.completed,
-    startDate: DateTime.parse('2024-01-01'),
-    endDate: DateTime.parse('2024-01-01'),
-    progress: 20.60,
-    weight: 60,
-    color: '0',
+    priority: PriorityLevel.no,
     deadline: DateTime.now(),
     tags: ['PHIL1037', 'Essay'],
     updatedAt: DateTime.now(),

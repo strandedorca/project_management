@@ -1,5 +1,5 @@
+import 'package:project_manager/data/models/task.dart';
 import 'package:project_manager/data/repositories/task_repository.dart';
-import 'package:project_manager/models/task.dart';
 
 class InMemoryTaskRepository implements TaskRepository {
   // Private list of all tasks

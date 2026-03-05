@@ -1,5 +1,5 @@
+import 'package:project_manager/data/models/tag.dart';
 import 'package:project_manager/data/repositories/tag_repository.dart';
-import 'package:project_manager/models/tag.dart';
 
 class InMemoryTagRepository implements TagRepository {
   final List<Tag> _tags = [];
