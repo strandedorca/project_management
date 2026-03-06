@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:project_manager/themes/decorations.dart';
 import 'package:project_manager/themes/dimens.dart';
 
-class ProjectCreationFormField extends StatelessWidget {
-  const ProjectCreationFormField({
+class ProjectDetailFormField extends StatelessWidget {
+  const ProjectDetailFormField({
     super.key,
     this.label,
     required this.childField,

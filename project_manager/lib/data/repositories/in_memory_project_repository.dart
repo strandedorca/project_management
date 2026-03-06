@@ -30,7 +30,6 @@ class InMemoryProjectRepository implements ProjectRepository {
   /// **In real database:** Would generate ID, handle conflicts, etc.
   @override
   Project create(Project project) {
-    print(project.toJson());
     _projects.add(project);
     return project; // Return the project we just added
   }

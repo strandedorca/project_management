@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:project_manager/components/customScrollBar.dart';
 import 'package:project_manager/components/customTextFormField.dart';
+import 'package:project_manager/components/formFieldWrapper.dart';
 import 'package:project_manager/components/formIconButton.dart';
 import 'package:project_manager/data/models/option.dart';
 import 'package:project_manager/themes/decorations.dart';
@@ -13,7 +14,8 @@ import 'package:project_manager/themes/dimens.dart';
 /// CustomDropdown is a dropdown menu for selecting a value from a list of options.
 ///
 /// It uses [Overlay] and [LayerLink] to float above the main widget.
-/// It wraps around [CustomTextFormField] to achieve consistent styling with other form fields.
+/// It wraps around [FormFieldWrapper] and [CustomTextFormField] to achieve consistent styling with other form fields.
+/// There's no need to wrap this widget in [FormFieldWrapper] as it already does that.
 /// The controller is managed internally and is used to control the displayed text field.
 /// The value is stored in the [selectedValue] and exposed through the [onSelected] callback.
 ///
@@ -199,19 +201,19 @@ class _CustomDropdownState extends State<CustomDropdown> {
     return CompositedTransformTarget(
       key: _targetKey,
       link: layerLink,
-      // child: FormFieldWrapper(
-      //   childHasSuffixIcon: true,
-      child: CustomTextFormField(
-        hintText: widget.hintText,
-        onTap: _showDropdown,
-        readOnly: true,
-        suffixIcon: FormIconButton(
-          iconData: widget.suffixIcon ?? Icons.arrow_drop_down,
-          onPressed: _showDropdown,
+      child: FormFieldWrapper(
+        childHasSuffixIcon: true,
+        childField: CustomTextFormField(
+          hintText: widget.hintText,
+          onTap: _showDropdown,
+          readOnly: true,
+          suffixIcon: FormIconButton(
+            iconData: widget.suffixIcon ?? Icons.arrow_drop_down,
+            onPressed: _showDropdown,
+          ),
+          controller: _controller,
         ),
-        controller: _controller,
       ),
-      // ),
     );
   }
 }

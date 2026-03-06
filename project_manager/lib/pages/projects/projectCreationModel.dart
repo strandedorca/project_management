@@ -1,6 +1,7 @@
 // This is a form DTO (Data Transfer Object)
 // Not a real model - just a temporary object to hold form data
 import 'package:project_manager/data/models/priority_level.dart';
+import 'package:project_manager/data/models/project.dart';
 import 'package:project_manager/data/models/status.dart';
 
 class ProjectCreationModel {
@@ -21,4 +22,30 @@ class ProjectCreationModel {
     this.status,
     this.tags,
   });
+
+  static ProjectCreationModel fromProject(Project project) {
+    return ProjectCreationModel(
+      name: project.name,
+      description: project.description,
+      categoryId: project.categoryId,
+      deadline: project.deadline,
+      priority: project.priority,
+      status: project.status,
+      tags: project.tags,
+    );
+  }
+
+  Project toProject(String id) {
+    return Project(
+      id: id,
+      name: name!,
+      description: description,
+      categoryId: categoryId!,
+      deadline: deadline,
+      priority: priority ?? PriorityLevel.no,
+      status: status ?? ProjectStatus.notStarted,
+      tags: tags,
+      updatedAt: DateTime.now(),
+    );
+  }
 }

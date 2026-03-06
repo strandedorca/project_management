@@ -37,27 +37,25 @@ class _DashboardState extends State<Dashboard> {
   Widget build(BuildContext context) {
     return Container(
       color: Theme.of(context).colorScheme.surface,
-      child: SafeArea(
-        child: Scaffold(
-          appBar: DashboardAppbar(user: _user),
-          body: Padding(
-            padding: EdgeInsets.only(
-              top: AppDimens.appPadding,
-              left: AppDimens.appPadding,
-              right: AppDimens.appPadding,
-            ),
-            child: SingleChildScrollView(
-              child: Padding(
-                padding: EdgeInsets.only(bottom: AppDimens.appPadding),
-                child: Column(
-                  children: [
-                    Section(body: Projects(), title: 'Ongoing Projects'),
-                    SizedBox(height: AppDimens.spacingMedium),
-                    Section(body: Deadlines(), title: 'Upcoming Deadlines'),
-                    SizedBox(height: AppDimens.spacingMedium),
-                    Section(body: DueTasks(), title: 'Due Tasks'),
-                  ],
-                ),
+      child: Scaffold(
+        appBar: DashboardAppbar(user: _user),
+        body: Padding(
+          padding: EdgeInsets.only(
+            top: AppDimens.appPadding,
+            left: AppDimens.appPadding,
+            right: AppDimens.appPadding,
+          ),
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: EdgeInsets.only(bottom: AppDimens.appPadding),
+              child: Column(
+                children: [
+                  Section(body: Projects(), title: 'Ongoing Projects'),
+                  SizedBox(height: AppDimens.spacingMedium),
+                  Section(body: Deadlines(), title: 'Upcoming Deadlines'),
+                  SizedBox(height: AppDimens.spacingMedium),
+                  Section(body: DueTasks(), title: 'Due Tasks'),
+                ],
               ),
             ),
           ),

@@ -51,7 +51,7 @@ class DeadlinePickerFormField extends StatelessWidget {
     );
 
     if (picked != null) {
-      // Update the controller text and call the onDateSelected callback
+      // Update the controller text and value and call the onDateSelected callback
       controller.text = DateFormatter.dateOnly(picked);
       onDateSelected(picked);
     }

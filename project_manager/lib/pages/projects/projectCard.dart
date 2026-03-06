@@ -5,6 +5,10 @@ import 'package:project_manager/themes/dimens.dart';
 import 'package:project_manager/utils/date_formatter.dart';
 import 'package:project_manager/utils/number_formatter.dart';
 
+/// This projectCard is like th projectCard in the dashboard page,
+/// but with the different position for the name of the project only
+/// TODO: Refactor this to be a reusable widget
+
 class ProjectCard extends StatelessWidget {
   final Project project;
   const ProjectCard({super.key, required this.project});

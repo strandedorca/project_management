@@ -13,6 +13,7 @@ import 'package:project_manager/themes/dimens.dart';
 class CustomTextFormField extends StatelessWidget {
   const CustomTextFormField({
     super.key,
+    this.initialValue,
     this.controller,
     this.validator,
     this.suffixIcon,
@@ -45,10 +46,12 @@ class CustomTextFormField extends StatelessWidget {
   final double fontSize;
   final EdgeInsets? contentPadding;
   final BoxConstraints suffixIconConstraints;
+  final String? initialValue;
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      initialValue: initialValue,
       style: Theme.of(
         context,
       ).textTheme.bodyMedium?.copyWith(fontSize: fontSize),

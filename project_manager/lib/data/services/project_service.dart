@@ -48,28 +48,21 @@ class ProjectService {
   //   return _repository.getById(id);
   // }
 
-  // /// Update project
-  // Project updateProject(Project project) {
-  //   // Update the project's updatedAt field manually (since copyWith isn't defined)
-  //   final updated = Project(
-  //     id: project.id,
-  //     name: project.name,
-  //     description: project.description,
-  //     categoryId: project.categoryId,
-  //     type: project.type,
-  //     tags: project.tags,
-  //     status: project.status,
-  //     startDate: project.startDate,
-  //     endDate: project.endDate,
-  //     progress: project.progress,
-  //     weight: project.weight,
-  //     color: project.color,
-  //     deadline: project.deadline,
-  //     updatedAt: DateTime.now(),
-  //     // Add any additional fields from Project as necessary
-  //   );
-  //   return _repository.update(updated);
-  // }
+  /// Update project
+  Project updateProject(Project project) {
+    final updated = Project(
+      id: project.id,
+      name: project.name,
+      description: project.description,
+      categoryId: project.categoryId,
+      tags: project.tags,
+      status: project.status,
+      priority: project.priority,
+      deadline: project.deadline,
+      updatedAt: DateTime.now(),
+    );
+    return _repository.update(updated);
+  }
 
   // /// Delete project
   // bool deleteProject(String id) {

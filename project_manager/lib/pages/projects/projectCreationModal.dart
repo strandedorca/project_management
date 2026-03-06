@@ -12,6 +12,7 @@ import 'package:project_manager/data/models/option.dart';
 import 'package:project_manager/data/models/priority_level.dart';
 import 'package:project_manager/data/models/status.dart';
 import 'package:project_manager/pages/projects/projectCreationModel.dart';
+import 'package:project_manager/pages/projects/projectDetail.dart';
 import 'package:project_manager/themes/dimens.dart';
 
 class ProjectCreationModal extends StatefulWidget {
@@ -52,6 +53,7 @@ class _ProjectCreationModalState extends State<ProjectCreationModal> {
       _categoryOptions = categories
           .map((e) => Option.fromValues(e.id, e.name, Icons.folder_outlined))
           .toList();
+      _data.categoryId = categories.isNotEmpty ? categories.first.id : '0';
     });
   }
 
@@ -79,7 +81,7 @@ class _ProjectCreationModalState extends State<ProjectCreationModal> {
 
     try {
       await Future.delayed(Duration(seconds: 1)); // fake API
-      projectService.createProject(
+      final project = projectService.createProject(
         name: _data.name!,
         description: _data.description,
         deadline: _data.deadline,
@@ -87,8 +89,16 @@ class _ProjectCreationModalState extends State<ProjectCreationModal> {
         status: _data.status,
         tags: _data.tags,
       );
+
+      if (mounted) {
+        Navigator.pop(context);
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (_) => ProjectDetail(project: project)),
+        );
+      }
     } finally {
-      setState(() => _loading = false);
+      if (mounted) setState(() => _loading = false);
     }
   }
 
@@ -101,12 +111,12 @@ class _ProjectCreationModalState extends State<ProjectCreationModal> {
         child: Column(
           children: [
             CustomTextFormField(
-              hintText: 'Task Name',
+              hintText: 'Project Name',
               fontSize: 20.0,
               autofocus: true,
               onSaved: (value) => _data.name = value ?? '',
               validator: (value) => value != null && value.isEmpty
-                  ? 'Task name is required'
+                  ? 'Project name is required'
                   : null,
             ),
             CustomTextFormField(
@@ -153,40 +163,34 @@ class _ProjectCreationModalState extends State<ProjectCreationModal> {
             Row(
               children: [
                 Expanded(
-                  child: FormFieldWrapper(
-                    childHasSuffixIcon: true,
-                    childField: CustomDropdown(
-                      hintText: 'Priority',
-                      initialValue: _data.priority?.value,
-                      options: _priorityOptions,
-                      onSelected: (value) {
-                        setState(() {
-                          _data.priority = PriorityLevel.values.firstWhere(
-                            (e) => e.value == value,
-                          );
-                        });
-                      },
-                      suffixIcon: Icons.flag_outlined,
-                    ),
+                  child: CustomDropdown(
+                    hintText: 'Priority',
+                    initialValue: _data.priority?.value,
+                    options: _priorityOptions,
+                    onSelected: (value) {
+                      setState(() {
+                        _data.priority = PriorityLevel.values.firstWhere(
+                          (e) => e.value == value,
+                        );
+                      });
+                    },
+                    suffixIcon: Icons.flag_outlined,
                   ),
                 ),
                 const SizedBox(width: AppDimens.spacingMedium),
                 Expanded(
-                  child: FormFieldWrapper(
-                    childHasSuffixIcon: true,
-                    childField: CustomDropdown(
-                      hintText: 'Status',
-                      initialValue: _data.status?.value,
-                      options: _statusOptions,
-                      onSelected: (value) {
-                        setState(
-                          () => _data.status = ProjectStatus.values.firstWhere(
-                            (e) => e.value == value,
-                          ),
-                        );
-                      },
-                      suffixIcon: Icons.check_circle_outline,
-                    ),
+                  child: CustomDropdown(
+                    hintText: 'Status',
+                    initialValue: _data.status?.value,
+                    options: _statusOptions,
+                    onSelected: (value) {
+                      setState(
+                        () => _data.status = ProjectStatus.values.firstWhere(
+                          (e) => e.value == value,
+                        ),
+                      );
+                    },
+                    suffixIcon: Icons.check_circle_outline,
                   ),
                 ),
               ],
@@ -209,7 +213,7 @@ class _ProjectCreationModalState extends State<ProjectCreationModal> {
               onPressed: _loading ? null : _handleSubmit,
               child: _loading
                   ? const CircularProgressIndicator()
-                  : const Text('Create Task'),
+                  : const Text('Create Project'),
             ),
           ],
         ),

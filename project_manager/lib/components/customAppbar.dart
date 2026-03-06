@@ -1,8 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:project_manager/themes/decorations.dart';
 
-// A custom app bar with leading icon, title and trailing icon.
-// Implements PreferredSizeWidget to ensure the app bar works with Scaffold.
+/// A custom app bar with leading icon, title and trailing icon.
+///
+/// Implements PreferredSizeWidget to ensure the app bar works with Scaffold.
+///
+/// ## Parameters
+/// - (required) [title]: The title of the app bar.
+/// - (optional) [leading]: The leading icon of the app bar.
+/// - (optional) [trailing]: The trailing icon of the app bar.
+/// - (optional) [leadingOnTap]: The callback to be called when the leading icon is tapped.
+/// - (optional) [trailingOnTap]: The callback to be called when the trailing icon is tapped.
+
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   static const double horizontalPadding = 20.0;
   static const double verticalPadding = 20.0;

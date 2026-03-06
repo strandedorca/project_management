@@ -2,8 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:project_manager/components/customAppbar.dart';
 import 'package:project_manager/data/models/user.dart';
 
-// A custom app bar with avatar, greeting and settings icon.
-// Implements PreferredSizeWidget to ensure the app bar works with Scaffold.
+/// DashboardAppbar is a custom app bar for the dashboard page with user information.
+///
+/// It wraps around [CustomAppBar] to achieve consistent styling with other app bars.
+/// Implements PreferredSizeWidget to ensure the app bar works with Scaffold.
+///
+/// ## Parameters
+/// - (required) [user]: The user to display in the app bar.
+
 class DashboardAppbar extends StatelessWidget implements PreferredSizeWidget {
   // Handle null user (loading state or not logged in)
   final User? user;
@@ -54,7 +60,6 @@ class DashboardAppbar extends StatelessWidget implements PreferredSizeWidget {
     );
 
     final Widget leading = CircleAvatar(
-      // radius: 21,
       backgroundColor: Theme.of(context).colorScheme.primaryContainer,
       backgroundImage: userImageUrl.isNotEmpty
           ? NetworkImage(userImageUrl)
