@@ -1,36 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:project_manager/app/dependencies.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:project_manager/app/project_providers.dart';
 import 'package:project_manager/components/customAppbar.dart';
 import 'package:project_manager/components/customChip.dart';
-import 'package:project_manager/data/models/project.dart';
 import 'package:project_manager/data/sample_statuses.dart';
 import 'package:project_manager/pages/projects/projectCard.dart';
 import 'package:project_manager/themes/dimens.dart';
 
-class ProjectList extends StatefulWidget {
+class ProjectList extends ConsumerWidget {
   const ProjectList({super.key});
 
   @override
-  State<ProjectList> createState() => _ProjectListState();
-}
+  Widget build(BuildContext context, WidgetRef ref) {
+    final projects = ref.watch(projectsProvider);
 
-class _ProjectListState extends State<ProjectList> {
-  List<Project> _projects = [];
-
-  @override
-  void initState() {
-    super.initState();
-    _fetchProjects();
-  }
-
-  void _fetchProjects() {
-    setState(() {
-      _projects = projectService.getAllProjects();
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(
         title: Text(
@@ -64,10 +47,10 @@ class _ProjectListState extends State<ProjectList> {
             SizedBox(height: AppDimens.spacingLarge),
             Expanded(
               child: ListView.builder(
-                itemCount: _projects.length,
+                itemCount: projects.length,
                 itemBuilder: (context, index) => Padding(
                   padding: EdgeInsets.only(bottom: AppDimens.spacingMedium),
-                  child: ProjectCard(project: _projects[index]),
+                  child: ProjectCard(project: projects[index]),
                 ),
               ),
             ),

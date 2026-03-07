@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:project_manager/app/dependencies.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:project_manager/app/project_providers.dart';
+import 'package:project_manager/app/providers.dart';
 import 'package:project_manager/components/button.dart';
 import 'package:project_manager/components/customDropdown.dart';
 import 'package:project_manager/components/customTextFormField.dart';
@@ -15,7 +17,7 @@ import 'package:project_manager/pages/projects/projectCreationModel.dart';
 import 'package:project_manager/pages/projects/projectDetail.dart';
 import 'package:project_manager/themes/dimens.dart';
 
-class ProjectCreationModal extends StatefulWidget {
+class ProjectCreationModal extends ConsumerStatefulWidget {
   const ProjectCreationModal({super.key});
 
   static Future<void> showModal(BuildContext context) {
@@ -27,10 +29,11 @@ class ProjectCreationModal extends StatefulWidget {
   }
 
   @override
-  State<ProjectCreationModal> createState() => _ProjectCreationModalState();
+  ConsumerState<ProjectCreationModal> createState() =>
+      _ProjectCreationModalState();
 }
 
-class _ProjectCreationModalState extends State<ProjectCreationModal> {
+class _ProjectCreationModalState extends ConsumerState<ProjectCreationModal> {
   final _formKey = GlobalKey<FormState>();
   final _data = ProjectCreationModel();
   bool _loading = false;
@@ -52,7 +55,7 @@ class _ProjectCreationModalState extends State<ProjectCreationModal> {
   }
 
   void _fetchCategories() {
-    final categories = categoryService.getAllCategories();
+    final categories = ref.read(categoryServiceProvider).getAllCategories();
     setState(() {
       _categoryOptions = categories
           .map((e) => Option.fromValues(e.id, e.name, Icons.folder_outlined))
@@ -62,7 +65,7 @@ class _ProjectCreationModalState extends State<ProjectCreationModal> {
   }
 
   void _fetchTags() {
-    final tags = tagService.getAllTags();
+    final tags = ref.read(tagServiceProvider).getAllTags();
     setState(() {
       _tagOptions = tags
           .map((e) => Option.fromValues(e.id, e.name, Icons.tag_outlined))
@@ -84,15 +87,19 @@ class _ProjectCreationModalState extends State<ProjectCreationModal> {
     setState(() => _loading = true);
 
     try {
-      await Future.delayed(Duration(seconds: 1)); // fake API
-      final project = projectService.createProject(
-        name: _data.name!,
-        description: _data.description,
-        deadline: _data.deadline,
-        priority: _data.priority,
-        status: _data.status,
-        tags: _data.tags,
-      );
+      ref
+          .read(projectsProvider.notifier)
+          .add(
+            name: _data.name!,
+            description: _data.description,
+            deadline: _data.deadline,
+            categoryId: _data.categoryId ?? '1',
+            priority: _data.priority,
+            status: _data.status,
+            tags: _data.tags ?? [],
+          );
+
+      final project = ref.read(projectsProvider).last;
 
       if (mounted) {
         Navigator.pop(context);
