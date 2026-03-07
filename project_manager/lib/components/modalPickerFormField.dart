@@ -79,7 +79,7 @@ class _ModalPickerFormFieldState extends State<ModalPickerFormField> {
     }
     ModelBottomSheet.show(
       context,
-      widget.modalTitle,
+      title: widget.modalTitle,
       _PickerSheetContent(
         options: widget.options,
         selectedValue: _selectedValue,

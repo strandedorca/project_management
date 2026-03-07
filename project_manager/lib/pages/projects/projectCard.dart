@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:project_manager/components/customChip.dart';
 import 'package:project_manager/data/models/project.dart';
+import 'package:project_manager/pages/projects/projectDetail.dart';
 import 'package:project_manager/themes/dimens.dart';
 import 'package:project_manager/utils/date_formatter.dart';
 import 'package:project_manager/utils/number_formatter.dart';
@@ -26,8 +27,11 @@ class ProjectCard extends StatelessWidget {
       // InkWell is a clickable widget that allows tapping
       child: InkWell(
         onTap: () {
-          // TODO: Navigate to the project details page
-          print('Project ${project.name} tapped');
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => ProjectDetail(project: project),
+            ),
+          );
         },
         child: SizedBox(
           height: 200,

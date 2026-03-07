@@ -14,21 +14,21 @@ import 'package:project_manager/pages/projects/projectDetailFormField.dart';
 import 'package:project_manager/themes/dimens.dart';
 import 'package:project_manager/utils/date_formatter.dart';
 
-class ProjectCreationForm extends StatefulWidget {
+class ProjectDetailForm extends StatefulWidget {
   final GlobalKey<FormState> formKey;
   final ProjectCreationModel data;
 
-  const ProjectCreationForm({
+  const ProjectDetailForm({
     super.key,
     required this.formKey,
     required this.data,
   });
 
   @override
-  State<ProjectCreationForm> createState() => _ProjectCreationFormState();
+  State<ProjectDetailForm> createState() => _ProjectDetailFormState();
 }
 
-class _ProjectCreationFormState extends State<ProjectCreationForm> {
+class _ProjectDetailFormState extends State<ProjectDetailForm> {
   late List<Option> _categoryOptions = [];
   final List<Option> _statusOptions = ProjectStatus.values
       .map((e) => Option.fromValues(e.value, e.label, null))

@@ -42,4 +42,9 @@ class ProjectsNotifier extends Notifier<List<Project>> {
     final updated = ref.read(projectServiceProvider).updateProject(project);
     state = state.map((p) => p.id == updated.id ? updated : p).toList();
   }
+
+  void delete(String id) {
+    ref.read(projectServiceProvider).deleteProject(id);
+    state = state.where((p) => p.id != id).toList();
+  }
 }

@@ -21,7 +21,7 @@ class TagsPicker extends StatelessWidget {
   void _showPicker(BuildContext context) {
     ModelBottomSheet.show(
       context,
-      'Select Tags',
+      title: 'Select Tags',
       _TagsPickerSheetContent(
         allTags: allTags,
         selectedTagIds: selectedTagIds,

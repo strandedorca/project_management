@@ -64,10 +64,10 @@ class ProjectService {
     return _repository.update(updated);
   }
 
-  // /// Delete project
-  // bool deleteProject(String id) {
-  //   return _repository.delete(id);
-  // }
+  /// Delete project
+  bool deleteProject(String id) {
+    return _repository.delete(id);
+  }
 
   // /// Business logic: Get ongoing projects
   // List<Project> getOngoingProjects() {

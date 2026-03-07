@@ -23,8 +23,8 @@ class ProjectCreationModal extends ConsumerStatefulWidget {
   static Future<void> showModal(BuildContext context) {
     return ModelBottomSheet.show(
       context,
-      'New Project',
       ProjectCreationModal(),
+      title: 'New Project',
     );
   }
 

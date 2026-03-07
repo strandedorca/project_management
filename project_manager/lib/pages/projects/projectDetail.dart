@@ -1,42 +1,42 @@
 import 'package:flutter/material.dart';
-import 'package:project_manager/app/dependencies.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:project_manager/app/project_providers.dart';
 import 'package:project_manager/components/button.dart';
 import 'package:project_manager/components/customAppbar.dart';
 import 'package:project_manager/data/models/project.dart';
 import 'package:project_manager/pages/projects/projectCreationModel.dart';
 import 'package:project_manager/pages/projects/projectDetailForm.dart';
+import 'package:project_manager/pages/projects/projectDetailOptionsModal.dart';
 import 'package:project_manager/themes/dimens.dart';
 
-class ProjectDetail extends StatefulWidget {
+class ProjectDetail extends ConsumerStatefulWidget {
   const ProjectDetail({super.key, required this.project});
 
   final Project project;
 
   @override
-  State<ProjectDetail> createState() => _ProjectDetailState();
+  ConsumerState<ProjectDetail> createState() => _ProjectDetailState();
 }
 
-class _ProjectDetailState extends State<ProjectDetail> {
+class _ProjectDetailState extends ConsumerState<ProjectDetail> {
   final _formKey = GlobalKey<FormState>();
-  late final ProjectCreationModel _data = ProjectCreationModel.fromProject(
-    widget.project,
-  );
-  bool _loading = false;
+  late ProjectCreationModel _data;
+
+  @override
+  void initState() {
+    super.initState();
+    _data = ProjectCreationModel.fromProject(widget.project);
+  }
 
   Future<void> _handleSubmit() async {
     if (!_formKey.currentState!.validate()) return;
     _formKey.currentState!.save();
 
-    setState(() => _loading = true);
+    ref
+        .read(projectsProvider.notifier)
+        .update(_data.toProject(widget.project.id));
 
-    try {
-      await Future.delayed(Duration(seconds: 1)); // fake API
-      projectService.updateProject(_data.toProject(widget.project.id));
-
-      if (mounted) Navigator.pop(context);
-    } finally {
-      if (mounted) setState(() => _loading = false);
-    }
+    Navigator.of(context).pop();
   }
 
   @override
@@ -52,16 +52,21 @@ class _ProjectDetailState extends State<ProjectDetail> {
             ),
             leading: Icon(Icons.arrow_back),
             leadingOnTap: () => Navigator.of(context).pop(),
+            trailing: IconButton(
+              onPressed: () =>
+                  ProjectDetailOptionsModal.showModal(context, widget.project),
+              icon: Icon(Icons.more_vert),
+            ),
           ),
           body: Padding(
             padding: EdgeInsets.all(AppDimens.appPadding),
             // Make the form scrollable
             child: SingleChildScrollView(
-              child: ProjectCreationForm(formKey: _formKey, data: _data),
+              child: ProjectDetailForm(formKey: _formKey, data: _data),
             ),
           ),
           bottomNavigationBar: _BottomAppBarButton(
-            onPressed: _loading ? null : _handleSubmit,
+            onPressed: () => _handleSubmit(),
           ),
         ),
       ),

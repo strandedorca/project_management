@@ -66,7 +66,7 @@ class _MultiModalPickerFormFieldState extends State<MultiModalPickerFormField> {
   void _showPicker(BuildContext context) {
     ModelBottomSheet.show(
       context,
-      widget.modalTitle,
+      title: widget.modalTitle,
       _PickerSheetContent(
         options: widget.options,
         initialValues: _selectedValues,

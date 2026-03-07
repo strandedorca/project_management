@@ -17,20 +17,7 @@ class TaskCreationModal extends StatefulWidget {
   const TaskCreationModal({super.key});
 
   static void showModal(BuildContext context) {
-    ModelBottomSheet.show(
-      context,
-      'New Task',
-      TaskCreationModal(),
-      // actionIcon: IconButton(
-      //   padding: EdgeInsets.zero,
-      //   visualDensity: VisualDensity.compact,
-      //   icon: Icon(Icons.open_in_new),
-      //   onPressed: () => Navigator.push(
-      //     context,
-      //     MaterialPageRoute(builder: (context) => ProjectCreation()),
-      //   ),
-      // ),
-    );
+    ModelBottomSheet.show(context, title: 'New Task', TaskCreationModal());
   }
 
   @override

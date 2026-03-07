@@ -14,11 +14,11 @@ class ModelBottomSheet extends StatelessWidget {
   final Widget body;
   final Widget? actionIcon;
 
-  static Future<dynamic> show(
+  static Future<void> show(
     BuildContext context,
-    String? title,
     Widget body, {
     Widget? actionIcon,
+    String? title,
   }) {
     return showModalBottomSheet(
       context: context,

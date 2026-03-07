@@ -6,15 +6,15 @@ class Project {
   // All properties
   final String id;
 
-  final String name;
-  final String? description; // Made nullable since it's optional
-  final DateTime? deadline;
-  final String categoryId;
-  final ProjectStatus status;
-  final PriorityLevel priority;
-  final List<String>? tags;
+  String name;
+  String? description; // Made nullable since it's optional
+  DateTime? deadline;
+  String categoryId;
+  ProjectStatus status;
+  PriorityLevel priority;
+  List<String>? tags;
 
-  final DateTime updatedAt;
+  DateTime updatedAt;
 
   // final String? type;
   // final DateTime startDate;
@@ -24,7 +24,7 @@ class Project {
   // final String color;
 
   // Constructor
-  const Project({
+  Project({
     required this.id,
     required this.name,
     this.description,
