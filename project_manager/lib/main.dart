@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 // ignore: unused_import
 import 'package:project_manager/appShell.dart';
 import 'package:project_manager/themes/app_theme.dart';
 
 // Entry point of the application
 void main() {
-  runApp(const MyApp());
+  runApp(const ProviderScope(child: MyApp()));
 }
 
 // Root widget of the application

@@ -18,8 +18,12 @@ import 'package:project_manager/themes/dimens.dart';
 class ProjectCreationModal extends StatefulWidget {
   const ProjectCreationModal({super.key});
 
-  static void showModal(BuildContext context) {
-    ModelBottomSheet.show(context, 'New Project', ProjectCreationModal());
+  static Future<void> showModal(BuildContext context) {
+    return ModelBottomSheet.show(
+      context,
+      'New Project',
+      ProjectCreationModal(),
+    );
   }
 
   @override

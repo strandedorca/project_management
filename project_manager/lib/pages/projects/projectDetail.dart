@@ -25,7 +25,7 @@ class _ProjectDetailState extends State<ProjectDetail> {
 
   Future<void> _handleSubmit() async {
     if (!_formKey.currentState!.validate()) return;
-    _formKey.currentState!.save(); // triggers all onSaved → _data is fully updated
+    _formKey.currentState!.save();
 
     setState(() => _loading = true);
 
@@ -57,10 +57,7 @@ class _ProjectDetailState extends State<ProjectDetail> {
             padding: EdgeInsets.all(AppDimens.appPadding),
             // Make the form scrollable
             child: SingleChildScrollView(
-              child: ProjectCreationForm(
-                formKey: _formKey,
-                data: _data,
-              ),
+              child: ProjectCreationForm(formKey: _formKey, data: _data),
             ),
           ),
           bottomNavigationBar: _BottomAppBarButton(
@@ -80,7 +77,7 @@ class _BottomAppBarButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Widget buttonText = Text(
-      'Create Project',
+      'Update Project',
       style: Theme.of(context).textTheme.titleMedium,
     );
 
