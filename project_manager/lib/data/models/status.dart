@@ -1,6 +1,6 @@
 // Project status enum
 enum ProjectStatus {
-  onGoing('on_going', 'Ongoing'),
+  onGoing('ongoing', 'Ongoing'),
   notStarted('not_started', 'Not Started'),
   completed('completed', 'Completed');
 

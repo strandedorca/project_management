@@ -2,29 +2,27 @@ import 'package:project_manager/data/models/tag.dart';
 import 'package:project_manager/data/repositories/tag_repository.dart';
 
 class InMemoryTagRepository implements TagRepository {
-  final List<Tag> _tags = [];
+  // Sample tags -  TODO
+  final List<Tag> _tags = [
+    Tag(id: '1', name: 'Ambi'),
+    Tag(id: '2', name: 'Blender'),
+    Tag(id: '3', name: 'Cinema 4D'),
+    Tag(id: '4', name: 'Maya'),
+    Tag(id: '5', name: 'Substance Painter'),
+    Tag(id: '6', name: 'Substance Designer'),
+    Tag(id: '7', name: 'Substance Render'),
+    Tag(id: '8', name: 'Substance Matte'),
+    Tag(id: '9', name: 'Substance Normal'),
+    Tag(id: '10', name: 'Substance Displacement'),
+    Tag(id: '11', name: 'Substance Height'),
+    Tag(id: '12', name: 'Substance Roughness'),
+    Tag(id: '13', name: 'Substance Metallic'),
+    Tag(id: '14', name: 'Substance Ambient Occlusion'),
+  ];
 
   @override
   List<Tag> getAll() {
-    // return List.from(_tags);
-    // Sample tags -  TODO
-    final List<Tag> tags = [
-      Tag(id: '1', name: 'Ambi'),
-      Tag(id: '2', name: 'Blender'),
-      Tag(id: '3', name: 'Cinema 4D'),
-      Tag(id: '4', name: 'Maya'),
-      Tag(id: '5', name: 'Substance Painter'),
-      Tag(id: '6', name: 'Substance Designer'),
-      Tag(id: '7', name: 'Substance Render'),
-      Tag(id: '8', name: 'Substance Matte'),
-      Tag(id: '9', name: 'Substance Normal'),
-      Tag(id: '10', name: 'Substance Displacement'),
-      Tag(id: '11', name: 'Substance Height'),
-      Tag(id: '12', name: 'Substance Roughness'),
-      Tag(id: '13', name: 'Substance Metallic'),
-      Tag(id: '14', name: 'Substance Ambient Occlusion'),
-    ];
-    return tags;
+    return List.from(_tags);
   }
 
   @override

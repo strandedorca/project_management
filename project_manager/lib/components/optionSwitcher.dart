@@ -35,10 +35,11 @@ class OptionSwitcherState extends State<OptionSwitcher> {
 
   @override
   Widget build(BuildContext context) {
-    return DecoratedBox(
-      decoration: AppDecorations.roundedBorderedBox(context, 999),
+    return Material(
+      color: Colors.transparent,
+      shape: AppDecorations.roundedBorderedRectangleBorder(context, 999),
+      clipBehavior: Clip.antiAlias,
       child: Stack(
-        alignment: Alignment.center,
         children: [
           // Invisible-text background part
           Positioned(

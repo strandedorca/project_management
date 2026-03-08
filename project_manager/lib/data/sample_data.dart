@@ -13,7 +13,7 @@ final List<Project> sampleProjects = [
     status: ProjectStatus.onGoing,
     priority: PriorityLevel.no,
     deadline: DateTime.now(),
-    tags: ['COMP1000', 'Group Project'],
+    tags: ['2', '1'],
     updatedAt: DateTime.now(),
   ),
   Project(
@@ -24,7 +24,7 @@ final List<Project> sampleProjects = [
     status: ProjectStatus.notStarted,
     priority: PriorityLevel.no,
     deadline: DateTime.now(),
-    tags: ['HIST2088', 'Essay', 'Personal', 'Hurdle'],
+    tags: ['2', '3', '4', '5'],
     updatedAt: DateTime.now(),
   ),
   Project(
@@ -35,7 +35,7 @@ final List<Project> sampleProjects = [
     status: ProjectStatus.completed,
     priority: PriorityLevel.no,
     deadline: DateTime.now(),
-    tags: ['PHIL1037', 'Essay'],
+    tags: ['2', '4'],
     updatedAt: DateTime.now(),
   ),
 ];

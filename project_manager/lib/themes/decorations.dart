@@ -29,7 +29,7 @@ class AppDecorations {
     );
   }
 
-  // Rounded bordered rectangle shape
+  // Rounded bordered rectangle SHAPE
   static RoundedRectangleBorder roundedBorderedRectangleBorder(
     BuildContext context,
     double radius,

@@ -2,31 +2,30 @@ import 'package:project_manager/data/models/category.dart';
 import 'package:project_manager/data/repositories/category_repository.dart';
 
 class InMemoryCategoryRepository implements CategoryRepository {
-  // Private list of all categories. Only Inbox exists by default.
+  // // Private list of all categories. Only Inbox exists by default.
+  // final List<Category> _categories = [
+  //   Category(id: '0', name: 'Inbox'), // Default category - always exists
+  // ];
+  // sample categories:
   final List<Category> _categories = [
-    Category(id: '0', name: 'Inbox'), // Default category - always exists
+    Category(id: '0', name: 'Inbox'),
+    Category(id: '1', name: 'Work'),
+    Category(
+      id: '99',
+      name:
+          'Something with a very long name that should be truncated and not wrapped',
+    ),
+    Category(id: '2', name: 'Personal'),
+    Category(id: '3', name: 'School'),
+    Category(id: '4', name: 'Health'),
+    Category(id: '5', name: 'Finance'),
+    Category(id: '6', name: 'Travel'),
+    Category(id: '7', name: 'Other'),
   ];
 
   @override
   List<Category> getAll() {
-    // return List.from(_categories); // Return a copy
-    // sample categories:
-    final List<Category> sampleCategories = [
-      Category(id: '0', name: 'Inbox'),
-      Category(id: '1', name: 'Work'),
-      Category(
-        id: '99',
-        name:
-            'Something with a very long name that should be truncated and not wrapped',
-      ),
-      Category(id: '2', name: 'Personal'),
-      Category(id: '3', name: 'School'),
-      Category(id: '4', name: 'Health'),
-      Category(id: '5', name: 'Finance'),
-      Category(id: '6', name: 'Travel'),
-      Category(id: '7', name: 'Other'),
-    ];
-    return sampleCategories;
+    return List.from(_categories); // Return a copy
   }
 
   @override
