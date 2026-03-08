@@ -2,6 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:project_manager/themes/decorations.dart';
 import 'package:project_manager/themes/dimens.dart';
 
+/// OptionSwitcher is a switcher for selecting an option from a list of options.
+///
+/// It is a horizontal row of two options, one on the left and one on the right.
+/// The option on the most left is selected by default.
+/// The index of the selected option is passed to the onChanged callback.
+///
+/// The options are passed as a list of strings.
+
 // currently only supports two options
 // 0 - first option
 // 1 - second option

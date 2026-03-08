@@ -6,6 +6,7 @@ class CustomChip extends StatelessWidget {
   final double horizontalPadding;
   final Color color;
   final bool hasBorder;
+  final double? borderRadius;
 
   const CustomChip({
     super.key,
@@ -14,6 +15,7 @@ class CustomChip extends StatelessWidget {
     this.horizontalPadding = 0,
     this.color = Colors.transparent,
     this.hasBorder = false,
+    this.borderRadius,
   });
 
   @override
@@ -25,7 +27,7 @@ class CustomChip extends StatelessWidget {
       ),
       decoration: BoxDecoration(
         color: color,
-        borderRadius: BorderRadius.circular(999),
+        borderRadius: BorderRadius.circular(borderRadius ?? 999),
         border: hasBorder
             ? Border.all(color: Theme.of(context).colorScheme.outline)
             : null,

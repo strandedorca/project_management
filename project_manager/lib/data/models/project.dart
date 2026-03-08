@@ -6,13 +6,14 @@ class Project {
   // All properties
   final String id;
 
-  String name;
-  String? description; // Made nullable since it's optional
-  DateTime? deadline;
-  String categoryId;
-  ProjectStatus status;
-  PriorityLevel priority;
-  List<String>? tags;
+  final String name;
+  final String? description; // Made nullable since it's optional
+  final DateTime? deadline;
+  final String categoryId;
+  final ProjectStatus status;
+  final PriorityLevel priority;
+  final List<String>? tags;
+  final double? weight;
 
   DateTime updatedAt;
 
@@ -20,7 +21,7 @@ class Project {
   // final DateTime startDate;
   // final DateTime endDate;
   // final double progress;
-  // final double weight;
+
   // final String color;
 
   // Constructor
@@ -33,6 +34,7 @@ class Project {
     required this.status,
     required this.priority,
     this.tags,
+    this.weight,
     required this.updatedAt,
   });
 

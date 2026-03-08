@@ -1,20 +1,34 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:project_manager/app/providers.dart';
 import 'package:project_manager/components/customChip.dart';
+import 'package:project_manager/data/models/priority_level.dart';
 import 'package:project_manager/data/models/project.dart';
+import 'package:project_manager/pages/projects/projectDetail.dart';
 import 'package:project_manager/themes/dimens.dart';
 import 'package:project_manager/utils/date_formatter.dart';
 import 'package:project_manager/utils/number_formatter.dart';
 
-/// This projectCard is like th projectCard in the project list page,
+/// This projectCard is like the projectCard in the project list page,
 /// but with the different position for the name of the project only
 /// TODO: Refactor this to be a reusable widget
 
-class ProjectCard extends StatelessWidget {
+class ProjectCard extends ConsumerWidget {
   final Project project;
   const ProjectCard({super.key, required this.project});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final String? categoryName = ref
+        .read(categoryServiceProvider)
+        .getCategoryById(project.categoryId)
+        ?.name;
+    final List<String> tagNames = ref
+        .read(tagServiceProvider)
+        .getTagsByIds(project.tags ?? [])
+        .map((tag) => tag.name)
+        .toList();
+
     return Card(
       margin: EdgeInsets.zero,
       // clipBehavior is necessary to prevent the InkWell from overflowing the Card
@@ -23,91 +37,128 @@ class ProjectCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(AppDimens.borderRadiusMedium),
         side: BorderSide(width: AppDimens.borderWidthMedium),
       ),
-      // InkWell is a clickable widget that allows tapping
       child: InkWell(
         onTap: () {
-          // TODO: Navigate to the project details page
-          print('Project ${project.name} tapped');
-        },
-        child: SizedBox(
-          height: 200,
-          width: 300,
-          child: Padding(
-            padding: EdgeInsets.all(AppDimens.paddingMedium),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Tags & Weight
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Expanded(
-                      // ShaderMask (& LinearGradient) to fade out the tags that overflow
-                      child: ShaderMask(
-                        // SingleChildScrollView > Row pattern to cut off the tags that overflow
-                        child: SingleChildScrollView(
-                          scrollDirection: Axis.horizontal,
-                          physics: NeverScrollableScrollPhysics(),
-                          child: Row(
-                            spacing: AppDimens.spacingSmall,
-                            children: (project.tags ?? [])
-                                .map(
-                                  (tag) => CustomChip(
-                                    name: tag,
-                                    color: Theme.of(
-                                      context,
-                                    ).colorScheme.outlineVariant,
-                                    verticalPadding: 4.0,
-                                    horizontalPadding: 10.0,
-                                  ),
-                                )
-                                .toList(),
-                          ),
-                        ),
-                        shaderCallback: (rect) => const LinearGradient(
-                          colors: [
-                            Colors.black,
-                            Colors.black,
-                            Colors.transparent,
-                          ],
-                          stops: [
-                            0.0,
-                            0.8, // fade starts at 0.8
-                            0.95, // fade ends at 0.9
-                          ],
-                        ).createShader(rect),
-                      ),
-                    ),
-                    // SizedBox(width: AppDimens.spacingSmall),
-                    // _SingleRadialChart(percentage: project.weight, size: 30),
-                  ],
-                ),
-
-                // Name
-                Text(
-                  project.name,
-                  style: Theme.of(context).textTheme.titleLarge,
-                  overflow: TextOverflow.ellipsis,
-                ),
-
-                // Progress
-                // CardProjectProgress(progress: project.progress),
-
-                // Deadline
-                project.deadline != null
-                    ? Align(
-                        alignment: Alignment.centerRight,
-                        child: Text(
-                          DateFormatter.shortDate(project.deadline!),
-                          style: Theme.of(context).textTheme.bodySmall,
-                        ),
-                      )
-                    : SizedBox.shrink(),
-              ],
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => ProjectDetail(project: project),
             ),
+          );
+        },
+        child: Padding(
+          padding: EdgeInsets.all(AppDimens.paddingMedium),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Tags & Weight/Priority
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: _ScrollableTags(
+                      category: categoryName ?? '',
+                      tags: tagNames,
+                    ),
+                  ),
+                  SizedBox(width: AppDimens.spacingSmall),
+                  project.weight != null
+                      ? _SingleRadialChart(
+                          percentage: project.weight!,
+                          size: 30,
+                        )
+                      : _PriorityIndicator(
+                          priority: project.priority,
+                          size: 30,
+                        ),
+                ],
+              ),
+              SizedBox(height: AppDimens.spacingSmall),
+              // Name
+              Text(
+                project.name,
+                style: Theme.of(context).textTheme.titleLarge,
+                overflow: TextOverflow.ellipsis,
+              ),
+              SizedBox(height: AppDimens.spacingSmall),
+              // Progress
+              // CardProjectProgress(progress: project.progress),
+              // SizedBox(height: AppDimens.spacingSmall),
+              // Deadline
+              Align(
+                alignment: Alignment.centerRight,
+                child: Text(
+                  project.deadline != null
+                      ? DateFormatter.shortDate(project.deadline!)
+                      : 'No deadline',
+                  style: Theme.of(context).textTheme.bodySmall,
+                ),
+              ),
+            ],
           ),
         ),
+      ),
+    );
+  }
+}
+
+class _ScrollableTags extends StatelessWidget {
+  final String category;
+  final List<String> tags;
+  const _ScrollableTags({required this.category, required this.tags});
+
+  @override
+  Widget build(BuildContext context) {
+    // ShaderMask (& LinearGradient) to fade out the tags that overflow
+    return ShaderMask(
+      // SingleChildScrollView > Row pattern to cut off the tags that overflow
+      // SingleChildScrollView is necessary to avoid overflowing
+      child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        physics: NeverScrollableScrollPhysics(),
+        child: Row(
+          spacing: AppDimens.spacingSmall,
+          children: ([category, ...tags])
+              .map(
+                (tag) => CustomChip(
+                  name: tag,
+                  color: Theme.of(context).colorScheme.outlineVariant,
+                  verticalPadding: 4.0,
+                  horizontalPadding: 10.0,
+                  borderRadius: tag == category
+                      ? AppDimens.borderRadiusSmall
+                      : null,
+                ),
+              )
+              .toList(),
+        ),
+      ),
+      shaderCallback: (rect) => const LinearGradient(
+        colors: [Colors.black, Colors.black, Colors.transparent],
+        stops: [
+          0.0,
+          0.8, // fade starts at 0.8
+          0.95, // fade ends at 0.9
+        ],
+      ).createShader(rect),
+    );
+  }
+}
+
+class _PriorityIndicator extends StatelessWidget {
+  final PriorityLevel priority;
+  final double size;
+  const _PriorityIndicator({required this.priority, required this.size});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: size,
+      height: size,
+      decoration: BoxDecoration(
+        border: Border.all(color: priority.borderColor, width: 4),
+        color: priority.color.withValues(alpha: 0.2),
+        shape: BoxShape.circle,
       ),
     );
   }

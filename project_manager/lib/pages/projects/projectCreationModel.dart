@@ -12,6 +12,7 @@ class ProjectCreationModel {
   PriorityLevel? priority;
   ProjectStatus? status;
   List<String>? tags;
+  double? weight;
 
   ProjectCreationModel({
     this.name,
@@ -21,6 +22,7 @@ class ProjectCreationModel {
     this.priority,
     this.status,
     this.tags,
+    this.weight,
   });
 
   static ProjectCreationModel fromProject(Project project) {
@@ -32,6 +34,7 @@ class ProjectCreationModel {
       priority: project.priority,
       status: project.status,
       tags: project.tags,
+      weight: project.weight,
     );
   }
 
@@ -45,6 +48,7 @@ class ProjectCreationModel {
       priority: priority ?? PriorityLevel.no,
       status: status ?? ProjectStatus.notStarted,
       tags: tags,
+      weight: weight,
       updatedAt: DateTime.now(),
     );
   }

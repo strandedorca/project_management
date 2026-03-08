@@ -26,7 +26,11 @@ class TagService {
   //   return _repository.delete(id);
   // }
 
-  // Tag? getTagById(String id) {
-  //   return _repository.getById(id);
-  // }
+  Tag? getTagById(String id) {
+    return _repository.getById(id);
+  }
+
+  List<Tag> getTagsByIds(List<String> ids) {
+    return _repository.getAll().where((tag) => ids.contains(tag.id)).toList();
+  }
 }

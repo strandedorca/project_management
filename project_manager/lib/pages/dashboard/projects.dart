@@ -17,7 +17,11 @@ class Projects extends StatelessWidget {
         itemCount: sampleProjects.length,
         itemBuilder: (context, index) => Padding(
           padding: EdgeInsets.only(right: AppDimens.spacingMedium),
-          child: ProjectCard(project: sampleProjects[index]),
+          child: SizedBox(
+            height: 200,
+            width: 300,
+            child: ProjectCard(project: sampleProjects[index]),
+          ),
         ),
       ),
     );

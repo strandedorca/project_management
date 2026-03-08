@@ -41,6 +41,17 @@ class _ProjectDetailState extends ConsumerState<ProjectDetail> {
 
   @override
   Widget build(BuildContext context) {
+    final projects = ref.watch(projectsProvider);
+    final doesExist = projects.any(
+      (project) => project.id == widget.project.id,
+    );
+    // If project somehow disappeared, automatically navigate back
+    if (!doesExist) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) Navigator.of(context).pop();
+      });
+    }
+
     return Container(
       color: Theme.of(context).colorScheme.surface,
       child: SafeArea(

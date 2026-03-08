@@ -14,10 +14,11 @@ class CategoryService {
     return _repository.getById(id);
   }
 
-  Category createCategory({required String name}) {
+  Category createCategory({required String name, String? icon}) {
     final category = Category(
       id: DateTime.now().millisecondsSinceEpoch.toString(),
       name: name,
+      icon: icon,
     );
     return _repository.create(category);
   }

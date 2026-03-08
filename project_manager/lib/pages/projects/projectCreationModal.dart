@@ -14,7 +14,6 @@ import 'package:project_manager/data/models/option.dart';
 import 'package:project_manager/data/models/priority_level.dart';
 import 'package:project_manager/data/models/status.dart';
 import 'package:project_manager/pages/projects/projectCreationModel.dart';
-import 'package:project_manager/pages/projects/projectDetail.dart';
 import 'package:project_manager/themes/dimens.dart';
 
 class ProjectCreationModal extends ConsumerStatefulWidget {
@@ -84,7 +83,6 @@ class _ProjectCreationModalState extends ConsumerState<ProjectCreationModal> {
   Future<void> _handleSubmit() async {
     if (!_formKey.currentState!.validate()) return;
     _formKey.currentState!.save(); // onSaved callback
-    setState(() => _loading = true);
 
     try {
       ref
@@ -98,18 +96,11 @@ class _ProjectCreationModalState extends ConsumerState<ProjectCreationModal> {
             status: _data.status,
             tags: _data.tags ?? [],
           );
-
-      final project = ref.read(projectsProvider).last;
-
-      if (mounted) {
-        Navigator.pop(context);
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (_) => ProjectDetail(project: project)),
-        );
-      }
-    } finally {
-      if (mounted) setState(() => _loading = false);
+      if (mounted) Navigator.pop(context);
+    } catch (e) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Failed to create project: $e')));
     }
   }
 

@@ -3,8 +3,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:project_manager/app/project_providers.dart';
 import 'package:project_manager/components/customAppbar.dart';
 import 'package:project_manager/components/customChip.dart';
+import 'package:project_manager/components/optionSwitcher.dart';
 import 'package:project_manager/data/sample_statuses.dart';
-import 'package:project_manager/pages/projects/projectCard.dart';
+import 'package:project_manager/pages/dashboard/projectCard.dart';
 import 'package:project_manager/themes/dimens.dart';
 
 class ProjectList extends ConsumerWidget {
@@ -28,22 +29,8 @@ class ProjectList extends ConsumerWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SizedBox(
-              height: 40,
-              child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                itemCount: defaultStatusNames.length,
-                itemBuilder: (context, index) => Container(
-                  margin: EdgeInsets.only(right: AppDimens.spacingSmall),
-                  child: CustomChip(
-                    name: defaultStatusNames[index],
-                    horizontalPadding: AppDimens.paddingMedium,
-                    color: Theme.of(context).colorScheme.primary,
-                    hasBorder: true,
-                  ),
-                ),
-              ),
-            ),
+            _StatusChips(),
+            _StatusSwitcher(),
             SizedBox(height: AppDimens.spacingLarge),
             Expanded(
               child: ListView.builder(
@@ -57,6 +44,41 @@ class ProjectList extends ConsumerWidget {
           ],
         ),
       ),
+    );
+  }
+}
+
+class _StatusChips extends StatelessWidget {
+  const _StatusChips();
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: 40,
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        itemCount: defaultStatusNames.length,
+        itemBuilder: (context, index) => Container(
+          margin: EdgeInsets.only(right: AppDimens.spacingSmall),
+          child: CustomChip(
+            name: defaultStatusNames[index],
+            horizontalPadding: AppDimens.paddingMedium,
+            color: Theme.of(context).colorScheme.primary,
+            hasBorder: true,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _StatusSwitcher extends StatelessWidget {
+  const _StatusSwitcher();
+  @override
+  Widget build(BuildContext context) {
+    return OptionSwitcher(
+      options: ['Not Started', 'In Progress'],
+      onChanged: (index) {},
     );
   }
 }

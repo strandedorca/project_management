@@ -12,7 +12,11 @@ class AppColors {
   static final Color textSecondary = textPrimary.withValues(alpha: 0.8);
   static final Color transparentPrimary = textPrimary.withValues(alpha: 0.25);
 
-  static const Color error = Color(0xFFB00020);
+  static const Color error = Color(0xFFbf5e57);
+  static const Color blue = Color(0xFF3b6cc5);
+  static const Color green = Color(0xFF57a65b);
+  static const Color yellow = Color(0xFFd88b33);
+  static const Color grey = Color(0xFF6c6c6c);
 
   // Additional custom colors
 

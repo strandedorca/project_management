@@ -125,3 +125,8 @@ Multiple files have commented-out properties, methods, and TODOs. Clean up befor
 ### `_BottomAppBarButton` text says "Create Project" on the detail page
 **File:** `lib/pages/projects/projectDetail.dart`
 **Fix:** Change button text to "Update Project" (or "Save Changes").
+
+### `ProjectDetailOptionsModal.showModal` does not accept an `onDeleted` callback
+**File:** `lib/pages/projects/projectDetailOptionsModal.dart`
+**Context:** `ProjectDetail` passes `() => context.go(AppRoutes.projects)` as the third argument to `showModal`, but the current signature only accepts `(BuildContext, Project)`. The callback is silently ignored.
+**Fix:** Update `showModal` signature to `showModal(BuildContext context, Project project, [VoidCallback? onDeleted])`, store it on the widget, and call `onDeleted?.call()` after `Navigator.pop(context)` inside `_handleDelete`.
