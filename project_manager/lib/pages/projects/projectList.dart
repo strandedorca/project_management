@@ -8,16 +8,16 @@ import 'package:project_manager/pages/dashboard/projectCard.dart';
 import 'package:project_manager/pages/projects/fullWidthSwitcher.dart';
 import 'package:project_manager/themes/dimens.dart';
 
-enum Tab {
-  all(0, 'all'),
-  onGoing(1, 'ongoing'),
-  notStarted(2, 'not_started'),
-  completed(3, 'completed');
+enum StatusFilter {
+  all('all', 'All'),
+  notStarted('not_started', 'Not Started'),
+  onGoing('ongoing', 'Ongoing'),
+  completed('completed', 'Completed');
 
-  final int i;
   final String value;
+  final String label;
 
-  const Tab(this.i, this.value);
+  const StatusFilter(this.value, this.label);
 }
 
 class ProjectList extends ConsumerStatefulWidget {
@@ -28,11 +28,11 @@ class ProjectList extends ConsumerStatefulWidget {
 }
 
 class _ProjectListState extends ConsumerState<ProjectList> {
-  Tab _selectedTab = Tab.all;
+  StatusFilter _selectedStatusFilter = StatusFilter.all;
 
   void handleTabSwitch(int index) {
     setState(() {
-      _selectedTab = Tab.values[index];
+      _selectedStatusFilter = StatusFilter.values[index];
     });
   }
 
@@ -41,9 +41,9 @@ class _ProjectListState extends ConsumerState<ProjectList> {
     final projects = ref.watch(projectsProvider);
     final filteredProjects = projects
         .where(
-          (project) => _selectedTab == Tab.all
+          (project) => _selectedStatusFilter == StatusFilter.all
               ? true
-              : project.status.value == _selectedTab.value,
+              : project.status.value == _selectedStatusFilter.value,
         )
         .toList();
 
@@ -62,7 +62,7 @@ class _ProjectListState extends ConsumerState<ProjectList> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _TabSwitcher(onTabSwitch: handleTabSwitch),
-            SizedBox(height: AppDimens.spacingLarge),
+            const SizedBox(height: AppDimens.spacingLarge),
             Expanded(
               child: ListView.builder(
                 itemCount: filteredProjects.length,
@@ -111,7 +111,9 @@ class _TabSwitcher extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FullWidthSwitcher(
-      options: ['All', 'Not Started', 'Ongoing', 'Completed'],
+      options: StatusFilter.values
+          .map((statusFilter) => statusFilter.label)
+          .toList(),
       onChanged: (index) => onTabSwitch(index),
     );
   }
