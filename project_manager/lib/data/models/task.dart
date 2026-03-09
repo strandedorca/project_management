@@ -27,7 +27,6 @@ class Task {
     this.dueDate,
     required this.status,
     required this.priority,
-    // required this.createdAt,
     required this.updatedAt,
   });
 

@@ -4,22 +4,19 @@ import 'package:project_manager/data/models/priority_level.dart';
 import 'package:project_manager/data/models/status.dart';
 import 'package:project_manager/data/models/task.dart';
 
-final tasksProvider = NotifierProvider.autoDispose
-    .family<TasksNotifier, List<Task>, String>(TasksNotifier.new);
+final tasksProvider = NotifierProvider.autoDispose<TasksNotifier, List<Task>>(
+  TasksNotifier.new,
+);
 
 class TasksNotifier extends Notifier<List<Task>> {
-  final String projectId;
-
-  TasksNotifier(this.projectId);
-
   @override
   List<Task> build() {
-    return ref.read(taskServiceProvider).getTasksByProjectId(projectId);
+    return ref.read(taskServiceProvider).getAllTasks();
   }
 
   void add({
     required String name,
-    required String parentId,
+    String? parentId,
     String? description,
     DateTime? dueDate,
     Status? status,
@@ -38,3 +35,11 @@ class TasksNotifier extends Notifier<List<Task>> {
     state = [...state, task];
   }
 }
+
+final projectTasksProvider = Provider.autoDispose.family<List<Task>, String>((
+  ref,
+  projectId,
+) {
+  final allTasks = ref.watch(tasksProvider);
+  return allTasks.where((t) => t.parentId == projectId).toList();
+});

@@ -73,7 +73,7 @@ class _ProjectDetailFormState extends ConsumerState<ProjectDetailForm> {
 
   @override
   Widget build(BuildContext context) {
-    final tasks = ref.watch(tasksProvider(_data.id!));
+    final tasks = ref.watch(projectTasksProvider(_data.id!));
 
     return Form(
       key: widget.formKey,

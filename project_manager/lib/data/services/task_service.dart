@@ -20,7 +20,7 @@ class TaskService {
   /// Create task with auto-generated ID
   Task createTask({
     required String name,
-    required String parentId,
+    String? parentId,
     String? description,
     DateTime? dueDate,
     Status? status,
@@ -32,7 +32,7 @@ class TaskService {
       id: id,
       name: name,
       description: description,
-      parentId: parentId,
+      parentId: parentId ?? 'inbox',
       dueDate: dueDate,
       status: status ?? Status.pending,
       priority: priority ?? PriorityLevel.no,

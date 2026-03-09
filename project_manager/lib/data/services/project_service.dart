@@ -47,7 +47,7 @@ class ProjectService {
       id: id,
       name: name,
       description: description,
-      categoryId: categoryId ?? '1',
+      categoryId: categoryId ?? 'inbox',
       status: status ?? Status.pending,
       deadline: deadline,
       priority: priority ?? PriorityLevel.no,
@@ -84,6 +84,11 @@ class ProjectService {
 
   /// Delete project
   bool deleteProject(String id) {
+    final project = _repository.getById(id);
+    if (project == null) throw Exception('Project not found');
+    if (project.isSystem) {
+      throw Exception('Cannot delete system projects');
+    }
     return _repository.delete(id);
   }
 

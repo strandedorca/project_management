@@ -35,6 +35,11 @@ class CategoryService {
   }
 
   bool deleteCategory(String id) {
+    final category = _repository.getById(id);
+    if (category == null) throw Exception('Category not found');
+    if (category.isSystem) {
+      throw Exception('Cannot delete system categories');
+    }
     return _repository.delete(id);
   }
 }

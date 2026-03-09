@@ -55,7 +55,7 @@ class _ProjectCreationModalState extends ConsumerState<ProjectCreationModal> {
             name: _data.name!,
             description: _data.description,
             deadline: _data.deadline,
-            categoryId: _data.categoryId ?? '1',
+            categoryId: _data.categoryId,
             priority: _data.priority,
             status: _data.status,
             tags: _data.tags ?? [],

@@ -43,18 +43,19 @@ class _TaskCreationModalState extends ConsumerState<TaskCreationModal> {
 
     try {
       ref
-          .read(tasksProvider(_data.parentId!).notifier)
+          .read(tasksProvider.notifier)
           .add(
             name: _data.name!,
-            parentId: _data.parentId!,
+            parentId: _data.parentId,
             description: _data.description,
             dueDate: _data.deadline,
-            status: _data.status ?? Status.pending,
-            priority: _data.priority ?? PriorityLevel.medium,
+            status: _data.status,
+            priority: _data.priority,
           );
       print('Task created: ${_data.name}');
       if (mounted) Navigator.pop(context);
     } catch (e) {
+      print('Failed to create project: $e');
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(SnackBar(content: Text('Failed to create project: $e')));
@@ -148,9 +149,7 @@ class _TaskCreationModalState extends ConsumerState<TaskCreationModal> {
                   child: CustomDropdown(
                     hintText: 'Status',
                     initialValue: _data.status?.value,
-                    options: Status.values
-                        .map((e) => Option.fromValues(e.value, e.label, null))
-                        .toList(),
+                    options: statusOptions,
                     onSelected: (value) {
                       setState(
                         () => _data.status = Status.values.firstWhere(
