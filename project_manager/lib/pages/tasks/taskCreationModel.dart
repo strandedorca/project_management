@@ -1,20 +1,20 @@
+import 'package:project_manager/data/models/priority_level.dart';
+import 'package:project_manager/data/models/status.dart';
+
 class TaskCreationModel {
   TaskCreationModel({
     this.name,
     this.description,
-    this.projectId,
+    this.parentId,
     this.deadline,
     this.priority,
-    this.tags,
-    // this.date,
-    // this.reminders,
+    this.status,
   });
+
   String? name;
   String? description;
-  String? projectId;
+  String? parentId;
   DateTime? deadline;
-  String? priority;
-  List<String>? tags;
-  // final DateTime? date;
-  // final List<String>? reminders;
+  PriorityLevel? priority;
+  Status? status;
 }

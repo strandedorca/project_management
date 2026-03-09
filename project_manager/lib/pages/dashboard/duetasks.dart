@@ -70,7 +70,7 @@ class _DueTaskTile extends StatelessWidget {
                   Text(task.name, overflow: TextOverflow.ellipsis),
                   const SizedBox(height: 2),
                   Text(
-                    task.projectName.isEmpty ? 'No project' : task.projectName,
+                    task.parentId.isEmpty ? 'No project' : task.parentId,
                     style: Theme.of(context).textTheme.bodySmall,
                   ),
                 ],

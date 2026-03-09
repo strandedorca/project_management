@@ -6,9 +6,8 @@ class Option {
   final String label;
   final IconData? icon;
 
-  // Add a method to convert to option
-  factory Option.fromValues(String value, String name, IconData? icon) {
-    return Option(value: value, label: name, icon: icon);
+  factory Option.fromValues(String value, String label, IconData? icon) {
+    return Option(value: value, label: label, icon: icon);
   }
 
   const Option({required this.value, required this.label, this.icon});

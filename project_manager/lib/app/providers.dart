@@ -9,29 +9,29 @@ import 'package:project_manager/data/services/tag_service.dart';
 import 'package:project_manager/data/services/task_service.dart';
 
 // Repositories — created once, shared across the app
-final _projectRepositoryProvider = Provider(
-  (_) => InMemoryProjectRepository(),
-);
-final _taskRepositoryProvider = Provider(
-  (_) => InMemoryTaskRepository(),
-);
+final _projectRepositoryProvider = Provider((_) => InMemoryProjectRepository());
+final _taskRepositoryProvider = Provider((_) => InMemoryTaskRepository());
 final _categoryRepositoryProvider = Provider(
   (_) => InMemoryCategoryRepository(),
 );
-final _tagRepositoryProvider = Provider(
-  (_) => InMemoryTagRepository(),
-);
+final _tagRepositoryProvider = Provider((_) => InMemoryTagRepository());
 
-// Services — injected with their repositories
-final projectServiceProvider = Provider(
-  (ref) => ProjectService(ref.read(_projectRepositoryProvider)),
-);
+// Services — watch repository providers
+final projectServiceProvider = Provider((ref) {
+  final projectService = ProjectService(ref.read(_projectRepositoryProvider));
+  projectService.initializeSystemProjects();
+  return projectService;
+});
 final taskServiceProvider = Provider(
   (ref) => TaskService(ref.read(_taskRepositoryProvider)),
 );
-final categoryServiceProvider = Provider(
-  (ref) => CategoryService(ref.read(_categoryRepositoryProvider)),
-);
+final categoryServiceProvider = Provider((ref) {
+  final categoryService = CategoryService(
+    ref.read(_categoryRepositoryProvider),
+  );
+  categoryService.initializeSystemCategories();
+  return categoryService;
+});
 final tagServiceProvider = Provider(
   (ref) => TagService(ref.read(_tagRepositoryProvider)),
 );

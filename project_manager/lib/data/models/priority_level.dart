@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:project_manager/data/models/option.dart';
 import 'package:project_manager/themes/colors.dart';
 
 enum PriorityLevel {
@@ -13,4 +14,8 @@ enum PriorityLevel {
   final Color borderColor;
 
   const PriorityLevel(this.value, this.label, this.color, this.borderColor);
+
+  /// Get all [PriorityLevel] values as [Option]s for dropdowns and pickers.
+  static List<Option> get getOptions =>
+      values.map((e) => Option.fromValues(e.value, e.label, null)).toList();
 }

@@ -1,3 +1,5 @@
+import 'package:project_manager/data/models/priority_level.dart';
+import 'package:project_manager/data/models/status.dart';
 import 'package:project_manager/data/models/task.dart';
 
 // This list contains tasks with deadlines only (if it has no deadline, it is not included)
@@ -6,42 +8,47 @@ List<Task> sampleDueTasks = [
   Task(
     id: '1',
     name: 'Caffeinate the paper',
-    projectId: '1',
-    projectName: 'Writing letters',
+    parentId: '1',
     dueDate: DateTime(2026, 1, 21),
-    status: TaskStatus.pending,
+    status: Status.pending,
+    updatedAt: DateTime.now(),
+    priority: PriorityLevel.medium,
   ),
   Task(
     id: '2',
     name: 'Plan workout routine & calorie intake',
-    projectId: '2',
-    projectName: 'Wellness',
+    parentId: '2',
     dueDate: DateTime(2026, 1, 14),
-    status: TaskStatus.inProgress,
+    status: Status.onGoing,
+    updatedAt: DateTime.now(),
+    priority: PriorityLevel.medium,
   ),
   Task(
     id: '3',
     name: 'Create the dopamine menu',
-    projectId: '3',
-    projectName: 'Productivity',
+    parentId: '3',
     dueDate: DateTime(2026, 1, 24),
-    status: TaskStatus.pending,
+    status: Status.pending,
+    updatedAt: DateTime.now(),
+    priority: PriorityLevel.medium,
   ),
   Task(
     id: '4',
     name:
         'Create the dopamine menu that is really long and will overflow the container',
-    projectId: '3',
+    parentId: '3',
     dueDate: DateTime(2026, 1, 24),
-    projectName: 'Productivity',
-    status: TaskStatus.completed,
+    status: Status.completed,
+    updatedAt: DateTime.now(),
+    priority: PriorityLevel.medium,
   ),
   Task(
     id: '5',
     name: 'Practice the piano',
-    projectId: '3',
-    projectName: 'Productivity',
+    parentId: '3',
     dueDate: DateTime(2026, 1, 23),
-    status: TaskStatus.completed,
+    status: Status.pending,
+    updatedAt: DateTime.now(),
+    priority: PriorityLevel.medium,
   ),
 ];

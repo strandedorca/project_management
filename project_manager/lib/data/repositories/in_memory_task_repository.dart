@@ -11,10 +11,10 @@ class InMemoryTaskRepository implements TaskRepository {
   }
 
   /// Get tasks for a specific project
-  /// - Filters tasks where `task.projectId == projectId`
+  /// - Filters tasks where `task.parentId == parentId`
   @override
   List<Task> getByProjectId(String projectId) {
-    return _tasks.where((task) => task.projectId == projectId).toList();
+    return _tasks.where((task) => task.parentId == projectId).toList();
   }
 
   @override

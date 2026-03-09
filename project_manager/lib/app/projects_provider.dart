@@ -1,5 +1,7 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:project_manager/app/providers.dart';
+import 'package:project_manager/data/models/option.dart';
 import 'package:project_manager/data/models/priority_level.dart';
 import 'package:project_manager/data/models/project.dart';
 import 'package:project_manager/data/models/status.dart';
@@ -20,7 +22,7 @@ class ProjectsNotifier extends Notifier<List<Project>> {
     String? description,
     DateTime? deadline,
     String? categoryId,
-    ProjectStatus? status,
+    Status? status,
     PriorityLevel? priority,
     List<String>? tags,
   }) {
@@ -48,3 +50,10 @@ class ProjectsNotifier extends Notifier<List<Project>> {
     state = state.where((p) => p.id != id).toList();
   }
 }
+
+final projectOptionsProvider = Provider<List<Option>>((ref) {
+  return ref
+      .watch(projectsProvider)
+      .map((e) => Option.fromValues(e.id, e.name, Icons.folder_outlined))
+      .toList();
+});

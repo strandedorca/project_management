@@ -5,28 +5,21 @@ import 'package:project_manager/data/models/status.dart';
 class Project {
   // All properties
   final String id;
-
   final String name;
-  final String? description; // Made nullable since it's optional
+  final bool isSystem;
+  final String? description;
   final DateTime? deadline;
   final String categoryId;
-  final ProjectStatus status;
+  final Status status;
   final PriorityLevel priority;
   final List<String>? tags;
   final double? weight;
 
   DateTime updatedAt;
 
-  // final String? type;
-  // final DateTime startDate;
-  // final DateTime endDate;
-  // final double progress;
-
-  // final String color;
-
-  // Constructor
   Project({
     required this.id,
+    this.isSystem = false,
     required this.name,
     this.description,
     this.deadline,
@@ -41,6 +34,7 @@ class Project {
   Map<String, dynamic> toJson() {
     return {
       'id': id,
+      'isSystem': isSystem,
       'name': name,
       'description': description,
       'deadline': deadline?.toIso8601String(),

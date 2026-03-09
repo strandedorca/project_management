@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:project_manager/app/dependencies.dart';
+import 'package:project_manager/app/tasks_provider.dart';
 import 'package:project_manager/components/customDropdown.dart';
 import 'package:project_manager/components/customTextFormField.dart';
 import 'package:project_manager/components/datePickerFormField.dart';
@@ -14,7 +16,7 @@ import 'package:project_manager/pages/projects/projectDetailFormField.dart';
 import 'package:project_manager/themes/dimens.dart';
 import 'package:project_manager/utils/date_formatter.dart';
 
-class ProjectDetailForm extends StatefulWidget {
+class ProjectDetailForm extends ConsumerStatefulWidget {
   final GlobalKey<FormState> formKey;
   final ProjectCreationModel data;
 
@@ -25,17 +27,13 @@ class ProjectDetailForm extends StatefulWidget {
   });
 
   @override
-  State<ProjectDetailForm> createState() => _ProjectDetailFormState();
+  ConsumerState<ProjectDetailForm> createState() => _ProjectDetailFormState();
 }
 
-class _ProjectDetailFormState extends State<ProjectDetailForm> {
+class _ProjectDetailFormState extends ConsumerState<ProjectDetailForm> {
   late List<Option> _categoryOptions = [];
-  final List<Option> _statusOptions = ProjectStatus.values
-      .map((e) => Option.fromValues(e.value, e.label, null))
-      .toList();
-  final List<Option> _priorityOptions = PriorityLevel.values
-      .map((e) => Option.fromValues(e.value, e.label, null))
-      .toList();
+  final List<Option> _statusOptions = Status.getOptions;
+  final List<Option> _priorityOptions = PriorityLevel.getOptions;
   ProjectCreationModel get _data => widget.data;
   late final List<Tag> _allTags;
   final _deadlineController = TextEditingController();
@@ -75,7 +73,8 @@ class _ProjectDetailFormState extends State<ProjectDetailForm> {
 
   @override
   Widget build(BuildContext context) {
-    print(_data.deadline);
+    final tasks = ref.watch(tasksProvider(_data.id!));
+
     return Form(
       key: widget.formKey,
       child: Column(
@@ -172,7 +171,7 @@ class _ProjectDetailFormState extends State<ProjectDetailForm> {
                     options: _statusOptions,
                     onSelected: (value) {
                       setState(
-                        () => _data.status = ProjectStatus.values.firstWhere(
+                        () => _data.status = Status.values.firstWhere(
                           (e) => e.value == value,
                         ),
                       );
@@ -197,6 +196,19 @@ class _ProjectDetailFormState extends State<ProjectDetailForm> {
                 });
               },
             ),
+          ),
+          const SizedBox(height: AppDimens.spacingMedium),
+          ListView.builder(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            itemCount: tasks.length,
+            itemBuilder: (context, index) {
+              final task = tasks[index];
+              return Padding(
+                padding: EdgeInsets.all(AppDimens.paddingMedium),
+                child: Text(task.name),
+              );
+            },
           ),
         ],
       ),

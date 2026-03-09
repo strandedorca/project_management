@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:project_manager/app/dependencies.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:project_manager/app/projects_provider.dart';
+import 'package:project_manager/app/tasks_provider.dart';
 import 'package:project_manager/components/button.dart';
 import 'package:project_manager/components/customDropdown.dart';
 import 'package:project_manager/components/customTextFormField.dart';
@@ -7,13 +9,13 @@ import 'package:project_manager/components/datePickerFormField.dart';
 import 'package:project_manager/components/formFieldWrapper.dart';
 import 'package:project_manager/components/modalBottomSheet.dart';
 import 'package:project_manager/components/modalPickerFormField.dart';
-import 'package:project_manager/components/multiModalPickerFormField.dart';
 import 'package:project_manager/data/models/option.dart';
 import 'package:project_manager/data/models/priority_level.dart';
+import 'package:project_manager/data/models/status.dart';
 import 'package:project_manager/pages/tasks/taskCreationModel.dart';
 import 'package:project_manager/themes/dimens.dart';
 
-class TaskCreationModal extends StatefulWidget {
+class TaskCreationModal extends ConsumerStatefulWidget {
   const TaskCreationModal({super.key});
 
   static void showModal(BuildContext context) {
@@ -21,49 +23,12 @@ class TaskCreationModal extends StatefulWidget {
   }
 
   @override
-  State<TaskCreationModal> createState() => _TaskCreationModalState();
+  ConsumerState<TaskCreationModal> createState() => _TaskCreationModalState();
 }
 
-class _TaskCreationModalState extends State<TaskCreationModal> {
+class _TaskCreationModalState extends ConsumerState<TaskCreationModal> {
   final _formKey = GlobalKey<FormState>();
   final _data = TaskCreationModel();
-  bool _loading = false;
-  // TODO: Categories are just parent projects
-  late List<Option> _projectOptions = [];
-  String? _selectedProjectId;
-  DateTime? _selectedDate;
-  late List<Option> _tagOptions = [];
-  List<String> _selectedTagValues = [];
-  String? _selectedPriorityValue;
-  final List<Option> _priorityOptions = PriorityLevel.values
-      .map((e) => Option.fromValues(e.value, e.label, null))
-      .toList();
-
-  @override
-  void initState() {
-    super.initState();
-    _fetchProjects();
-    _fetchTags();
-  }
-
-  void _fetchProjects() {
-    final projects = projectService.getAllProjects();
-    setState(() {
-      _projectOptions = projects
-          .map((e) => Option.fromValues(e.id, e.name, Icons.folder_outlined))
-          .toList();
-    });
-  }
-
-  void _fetchTags() {
-    final tags = tagService.getAllTags();
-    setState(() {
-      _tagOptions = tags
-          .map((e) => Option.fromValues(e.id, e.name, Icons.label_outlined))
-          .toList();
-    });
-  }
-
   final _deadlineController = TextEditingController();
 
   @override
@@ -75,25 +40,33 @@ class _TaskCreationModalState extends State<TaskCreationModal> {
   Future<void> _handleSubmit() async {
     if (!_formKey.currentState!.validate()) return;
     _formKey.currentState!.save();
-    print('Form is valid! Creating task...');
-
-    setState(() => _loading = true);
 
     try {
-      await Future.delayed(Duration(seconds: 1)); // fake API
-      print(_data.name);
-      print(_data.description);
-      print(_data.projectId);
-      print(_data.deadline);
-      print(_data.priority);
-      print(_data.tags);
-    } finally {
-      setState(() => _loading = false);
+      ref
+          .read(tasksProvider(_data.parentId!).notifier)
+          .add(
+            name: _data.name!,
+            parentId: _data.parentId!,
+            description: _data.description,
+            dueDate: _data.deadline,
+            status: _data.status ?? Status.pending,
+            priority: _data.priority ?? PriorityLevel.medium,
+          );
+      print('Task created: ${_data.name}');
+      if (mounted) Navigator.pop(context);
+    } catch (e) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Failed to create project: $e')));
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final List<Option> priorityOptions = PriorityLevel.getOptions;
+    final List<Option> statusOptions = Status.getOptions;
+    final List<Option> projectOptions = ref.watch(projectOptionsProvider);
+
     return Form(
       key: _formKey,
       child: Padding(
@@ -122,10 +95,10 @@ class _TaskCreationModalState extends State<TaskCreationModal> {
                       suffixIcon: Icons.folder_outlined,
                       modalTitle: 'Select Project',
                       hintText: 'Project',
-                      options: _projectOptions,
-                      initialValue: _selectedProjectId,
+                      options: projectOptions,
+                      initialValue: _data.parentId,
                       onSelected: (value) {
-                        _data.projectId = value;
+                        _data.parentId = value;
                       },
                     ),
                     childHasSuffixIcon: true,
@@ -136,14 +109,14 @@ class _TaskCreationModalState extends State<TaskCreationModal> {
                   child: FormFieldWrapper(
                     childField: DeadlinePickerFormField(
                       controller: _deadlineController,
-                      value: _selectedDate,
+                      value: _data.deadline,
                       onDateSelected: (date) {
-                        setState(() => _selectedDate = date);
+                        setState(() => _data.deadline = date);
                         _data.deadline = date;
                       },
                       onClear: () {
                         setState(() {
-                          _selectedDate = null;
+                          _data.deadline = null;
                         });
                       },
                     ),
@@ -158,73 +131,40 @@ class _TaskCreationModalState extends State<TaskCreationModal> {
                 Expanded(
                   child: CustomDropdown(
                     hintText: 'Priority',
-                    initialValue: _selectedPriorityValue,
-                    options: _priorityOptions,
+                    initialValue: _data.priority?.value,
+                    options: priorityOptions,
                     onSelected: (value) {
                       setState(() {
-                        _selectedPriorityValue = value;
-                        _data.priority = value;
+                        _data.priority = PriorityLevel.values.firstWhere(
+                          (e) => e.value == value,
+                        );
                       });
                     },
                     suffixIcon: Icons.flag_outlined,
                   ),
                 ),
                 const SizedBox(width: AppDimens.spacingMedium),
-                // TODO: add a reminder picker form field
                 Expanded(
-                  child: FormFieldWrapper(
-                    childField: CustomTextFormField(
-                      hintText: 'Reminder',
-                      onTap: () => print('reminder shown'),
-                      readOnly: true,
-                    ),
-                    suffixIcon: Icons.access_alarm_outlined,
+                  child: CustomDropdown(
+                    hintText: 'Status',
+                    initialValue: _data.status?.value,
+                    options: Status.values
+                        .map((e) => Option.fromValues(e.value, e.label, null))
+                        .toList(),
+                    onSelected: (value) {
+                      setState(
+                        () => _data.status = Status.values.firstWhere(
+                          (e) => e.value == value,
+                        ),
+                      );
+                    },
+                    suffixIcon: Icons.check_circle_outlined,
                   ),
                 ),
               ],
             ),
             const SizedBox(height: AppDimens.spacingMedium),
-            Row(
-              children: [
-                Expanded(
-                  child: FormFieldWrapper(
-                    childField: MultiModalPickerFormField(
-                      hintText: 'Tags',
-                      modalTitle: 'Select Tags',
-                      onSelected: (value) {
-                        setState(() {
-                          _selectedTagValues = value;
-                        });
-                        _data.tags = value;
-                      },
-                      options: _tagOptions,
-                      initialValues: _selectedTagValues,
-                      suffixIcon: Icons.label_outlined,
-                    ),
-                    childHasSuffixIcon: true,
-                  ),
-                ),
-
-                const SizedBox(width: AppDimens.spacingMedium),
-                Expanded(
-                  child: FormFieldWrapper(
-                    childField: CustomTextFormField(
-                      hintText: 'Date',
-                      onTap: () => print('date picker shown'),
-                      readOnly: true,
-                    ),
-                    suffixIcon: Icons.calendar_month_outlined,
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: AppDimens.spacingMedium),
-            Button(
-              onPressed: _loading ? null : _handleSubmit,
-              child: _loading
-                  ? const CircularProgressIndicator()
-                  : const Text('Create Task'),
-            ),
+            Button(onPressed: _handleSubmit, child: Text('Create Task')),
           ],
         ),
       ),

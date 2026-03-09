@@ -10,6 +10,24 @@ class ProjectService {
   /// This is "dependency injection" - service doesn't care which implementation
   ProjectService(this._repository);
 
+  void initializeSystemProjects() {
+    final projects = _repository.getAll();
+
+    if (!projects.any((c) => c.id == 'inbox')) {
+      _repository.create(
+        Project(
+          id: 'inbox',
+          name: 'Inbox',
+          isSystem: true,
+          categoryId: 'inbox',
+          status: Status.pending,
+          priority: PriorityLevel.no,
+          updatedAt: DateTime.now(),
+        ),
+      );
+    }
+  }
+
   /// Create project with auto-generated ID
   /// Business logic: Generate ID, set timestamps
   Project createProject({
@@ -17,7 +35,7 @@ class ProjectService {
     String? description,
     DateTime? deadline,
     String? categoryId,
-    ProjectStatus? status,
+    Status? status,
     PriorityLevel? priority,
     List<String>? tags,
   }) {
@@ -30,7 +48,7 @@ class ProjectService {
       name: name,
       description: description,
       categoryId: categoryId ?? '1',
-      status: status ?? ProjectStatus.notStarted,
+      status: status ?? Status.pending,
       deadline: deadline,
       priority: priority ?? PriorityLevel.no,
       tags: tags,

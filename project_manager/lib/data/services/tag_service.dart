@@ -18,13 +18,13 @@ class TagService {
     return _repository.create(tag);
   }
 
-  // Tag updateTag(Tag tag) {
-  //   return _repository.update(tag);
-  // }
+  Tag updateTag(Tag tag) {
+    return _repository.update(tag);
+  }
 
-  // bool deleteTag(String id) {
-  //   return _repository.delete(id);
-  // }
+  bool deleteTag(String id) {
+    return _repository.delete(id);
+  }
 
   Tag? getTagById(String id) {
     return _repository.getById(id);

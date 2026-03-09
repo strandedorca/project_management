@@ -6,6 +6,13 @@ class CategoryService {
 
   CategoryService(this._repository);
 
+  void initializeSystemCategories() {
+    final categories = _repository.getAll();
+    if (!categories.any((c) => c.id == 'inbox')) {
+      _repository.create(Category(id: 'inbox', name: 'Inbox', isSystem: true));
+    }
+  }
+
   List<Category> getAllCategories() {
     return _repository.getAll();
   }

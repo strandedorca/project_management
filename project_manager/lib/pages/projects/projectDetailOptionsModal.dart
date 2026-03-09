@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:project_manager/app/project_providers.dart';
+import 'package:project_manager/app/projects_provider.dart';
 import 'package:project_manager/components/modalBottomSheet.dart';
 import 'package:project_manager/data/models/option.dart';
 import 'package:project_manager/data/models/project.dart';

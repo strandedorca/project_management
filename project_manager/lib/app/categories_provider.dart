@@ -1,6 +1,8 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:project_manager/app/providers.dart';
 import 'package:project_manager/data/models/category.dart';
+import 'package:project_manager/data/models/option.dart';
 
 final categoriesProvider = NotifierProvider<CategoriesNotifier, List<Category>>(
   CategoriesNotifier.new,
@@ -20,3 +22,10 @@ class CategoriesNotifier extends Notifier<List<Category>> {
     state = [...state, category];
   }
 }
+
+final categoryOptionsProvider = Provider<List<Option>>((ref) {
+  return ref
+      .watch(categoriesProvider)
+      .map((e) => Option.fromValues(e.id, e.name, Icons.folder_outlined))
+      .toList();
+});

@@ -5,16 +5,18 @@ import 'package:project_manager/data/models/project.dart';
 import 'package:project_manager/data/models/status.dart';
 
 class ProjectCreationModel {
+  String? id;
   String? name;
   String? description;
   String? categoryId;
   DateTime? deadline;
   PriorityLevel? priority;
-  ProjectStatus? status;
+  Status? status;
   List<String>? tags;
   double? weight;
 
   ProjectCreationModel({
+    this.id,
     this.name,
     this.description,
     this.categoryId,
@@ -27,6 +29,7 @@ class ProjectCreationModel {
 
   static ProjectCreationModel fromProject(Project project) {
     return ProjectCreationModel(
+      id: project.id,
       name: project.name,
       description: project.description,
       categoryId: project.categoryId,
@@ -46,7 +49,7 @@ class ProjectCreationModel {
       categoryId: categoryId!,
       deadline: deadline,
       priority: priority ?? PriorityLevel.no,
-      status: status ?? ProjectStatus.notStarted,
+      status: status ?? Status.pending,
       tags: tags,
       weight: weight,
       updatedAt: DateTime.now(),

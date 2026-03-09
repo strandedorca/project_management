@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:project_manager/app/project_providers.dart';
-import 'package:project_manager/app/providers.dart';
+import 'package:project_manager/app/categories_provider.dart';
+import 'package:project_manager/app/projects_provider.dart';
+import 'package:project_manager/app/tags_provider.dart';
 import 'package:project_manager/components/button.dart';
 import 'package:project_manager/components/customDropdown.dart';
 import 'package:project_manager/components/customTextFormField.dart';
@@ -22,8 +23,8 @@ class ProjectCreationModal extends ConsumerStatefulWidget {
   static Future<void> showModal(BuildContext context) {
     return ModelBottomSheet.show(
       context,
-      ProjectCreationModal(),
       title: 'New Project',
+      ProjectCreationModal(),
     );
   }
 
@@ -35,43 +36,6 @@ class ProjectCreationModal extends ConsumerStatefulWidget {
 class _ProjectCreationModalState extends ConsumerState<ProjectCreationModal> {
   final _formKey = GlobalKey<FormState>();
   final _data = ProjectCreationModel();
-  bool _loading = false;
-
-  late List<Option> _categoryOptions = [];
-  final List<Option> _priorityOptions = PriorityLevel.values
-      .map((e) => Option.fromValues(e.value, e.label, null))
-      .toList();
-  final List<Option> _statusOptions = ProjectStatus.values
-      .map((e) => Option.fromValues(e.value, e.label, null))
-      .toList();
-  late List<Option> _tagOptions = [];
-
-  @override
-  void initState() {
-    super.initState();
-    _fetchCategories();
-    _fetchTags();
-  }
-
-  void _fetchCategories() {
-    final categories = ref.read(categoryServiceProvider).getAllCategories();
-    setState(() {
-      _categoryOptions = categories
-          .map((e) => Option.fromValues(e.id, e.name, Icons.folder_outlined))
-          .toList();
-      _data.categoryId = categories.isNotEmpty ? categories.first.id : '0';
-    });
-  }
-
-  void _fetchTags() {
-    final tags = ref.read(tagServiceProvider).getAllTags();
-    setState(() {
-      _tagOptions = tags
-          .map((e) => Option.fromValues(e.id, e.name, Icons.tag_outlined))
-          .toList();
-    });
-  }
-
   final _deadlineController = TextEditingController();
 
   @override
@@ -106,6 +70,11 @@ class _ProjectCreationModalState extends ConsumerState<ProjectCreationModal> {
 
   @override
   Widget build(BuildContext context) {
+    final List<Option> priorityOptions = PriorityLevel.getOptions;
+    final List<Option> statusOptions = Status.getOptions;
+    final List<Option> categoryOptions = ref.watch(categoryOptionsProvider);
+    final List<Option> tagOptions = ref.watch(tagOptionsProvider);
+
     return Form(
       key: _formKey,
       child: Padding(
@@ -134,7 +103,7 @@ class _ProjectCreationModalState extends ConsumerState<ProjectCreationModal> {
                       suffixIcon: Icons.folder_outlined,
                       modalTitle: 'Select Category',
                       hintText: 'Category',
-                      options: _categoryOptions,
+                      options: categoryOptions,
                       initialValue: _data.categoryId,
                       onSelected: (value) {
                         _data.categoryId = value;
@@ -168,7 +137,7 @@ class _ProjectCreationModalState extends ConsumerState<ProjectCreationModal> {
                   child: CustomDropdown(
                     hintText: 'Priority',
                     initialValue: _data.priority?.value,
-                    options: _priorityOptions,
+                    options: priorityOptions,
                     onSelected: (value) {
                       setState(() {
                         _data.priority = PriorityLevel.values.firstWhere(
@@ -184,10 +153,10 @@ class _ProjectCreationModalState extends ConsumerState<ProjectCreationModal> {
                   child: CustomDropdown(
                     hintText: 'Status',
                     initialValue: _data.status?.value,
-                    options: _statusOptions,
+                    options: statusOptions,
                     onSelected: (value) {
                       setState(
-                        () => _data.status = ProjectStatus.values.firstWhere(
+                        () => _data.status = Status.values.firstWhere(
                           (e) => e.value == value,
                         ),
                       );
@@ -205,17 +174,15 @@ class _ProjectCreationModalState extends ConsumerState<ProjectCreationModal> {
                 onSelected: (values) {
                   setState(() => _data.tags = values);
                 },
-                options: _tagOptions,
+                options: tagOptions,
                 initialValues: _data.tags ?? [],
                 suffixIcon: Icons.label_outlined,
               ),
             ),
             const SizedBox(height: AppDimens.spacingMedium),
             Button(
-              onPressed: _loading ? null : _handleSubmit,
-              child: _loading
-                  ? const CircularProgressIndicator()
-                  : const Text('Create Project'),
+              onPressed: _handleSubmit,
+              child: const Text('Create Project'),
             ),
           ],
         ),

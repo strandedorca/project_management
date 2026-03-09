@@ -6,46 +6,29 @@
 /// 3. Tasks track their completion status
 /// 4. Immutable model (all fields final)
 
+import 'package:project_manager/data/models/priority_level.dart';
+import 'package:project_manager/data/models/status.dart';
+
 class Task {
   final String id;
   final String name;
-
-  /// Optional: Can include notes, requirements, acceptance criteria, etc.
   final String? description;
-
-  /// - Every task must belong to a project
-  /// - Used to query "all tasks for project X"
-  /// - Used for navigation (go to project from task)
-  /// Relationship: Many tasks → One project (many-to-one)
-  final String projectId;
-
-  final String projectName;
-
-  /// **Why optional?**
-  /// - Not all tasks need specific deadlines
-  /// - Some tasks might just be "do when you can"
-  /// - Used in dashboard "Due Tasks" section
+  final String parentId;
   final DateTime? dueDate;
+  final Status status;
+  final PriorityLevel priority;
+  final DateTime updatedAt;
 
-  final TaskStatus status;
-
-  // Do i need these? And when? What are they for?
-  // final DateTime createdAt;
-
-  // final DateTime updatedAt;
-
-  // Constructor: used to create a new Task instance
-  // Note: Not const because DateTime is not a compile-time constant
   Task({
     required this.id,
     required this.name,
     this.description,
-    required this.projectId,
-    this.projectName = '',
+    required this.parentId,
     this.dueDate,
     required this.status,
+    required this.priority,
     // required this.createdAt,
-    // required this.updatedAt,
+    required this.updatedAt,
   });
 
   // /// Helper method: Check if task is overdue
@@ -117,15 +100,4 @@ class Task {
   // /// Hash code for this task
   // @override
   // int get hashCode => id.hashCode;
-}
-
-/// Task Status Enum
-enum TaskStatus {
-  pending('Pending'),
-  inProgress('In Progress'),
-  completed('Completed');
-
-  final String label;
-
-  const TaskStatus(this.label);
 }
