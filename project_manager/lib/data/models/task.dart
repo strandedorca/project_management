@@ -30,6 +30,28 @@ class Task {
     required this.updatedAt,
   });
 
+  Task copyWith({
+    String? id,
+    String? name,
+    String? description,
+    String? parentId,
+    DateTime? dueDate,
+    Status? status,
+    PriorityLevel? priority,
+    DateTime? updatedAt,
+  }) {
+    return Task(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      description: description ?? this.description,
+      parentId: parentId ?? this.parentId,
+      dueDate: dueDate ?? this.dueDate,
+      status: status ?? this.status,
+      priority: priority ?? this.priority,
+      updatedAt: updatedAt ?? DateTime.now(),
+    );
+  }
+
   // /// Helper method: Check if task is overdue
   // ///
   // /// **Returns:** true if task has a due date and it's passed

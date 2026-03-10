@@ -204,9 +204,24 @@ class _ProjectDetailFormState extends ConsumerState<ProjectDetailForm> {
             itemCount: tasks.length,
             itemBuilder: (context, index) {
               final task = tasks[index];
-              return Padding(
-                padding: EdgeInsets.all(AppDimens.paddingMedium),
-                child: Text(task.name),
+              return ListTile(
+                contentPadding: EdgeInsets.zero,
+                title: Text(task.name),
+                leading: Checkbox(
+                  activeColor: Theme.of(context).colorScheme.primary,
+                  checkColor: Theme.of(context).colorScheme.onPrimary,
+                  fillColor: WidgetStateProperty.all(
+                    Theme.of(context).colorScheme.primary,
+                  ),
+                  value: task.status == Status.completed,
+                  onChanged: (value) {
+                    if (task.status == Status.completed) {
+                      ref.read(tasksProvider.notifier).reopenTask(task.id);
+                    } else {
+                      ref.read(tasksProvider.notifier).completeTask(task.id);
+                    }
+                  },
+                ),
               );
             },
           ),

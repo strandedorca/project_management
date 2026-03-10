@@ -68,17 +68,7 @@ class ProjectService {
 
   /// Update project
   Project updateProject(Project project) {
-    final updated = Project(
-      id: project.id,
-      name: project.name,
-      description: project.description,
-      categoryId: project.categoryId,
-      tags: project.tags,
-      status: project.status,
-      priority: project.priority,
-      deadline: project.deadline,
-      updatedAt: DateTime.now(),
-    );
+    final updated = project.copyWith(updatedAt: DateTime.now());
     return _repository.update(updated);
   }
 

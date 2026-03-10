@@ -46,6 +46,28 @@ class Project {
     };
   }
 
+  Project copyWith({
+    String? id,
+    String? name,
+    String? description,
+    DateTime? deadline,
+    String? categoryId,
+    Status? status,
+    PriorityLevel? priority,
+    DateTime? updatedAt,
+  }) {
+    return Project(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      description: description ?? this.description,
+      deadline: deadline ?? this.deadline,
+      categoryId: categoryId ?? this.categoryId,
+      status: status ?? this.status,
+      priority: priority ?? this.priority,
+      updatedAt: updatedAt ?? DateTime.now(),
+    );
+  }
+
   // int get progressPercentage => int.parse(progress);
   // int get progressPercentage => (progress * 100).round();
 

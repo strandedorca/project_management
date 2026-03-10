@@ -34,6 +34,26 @@ class TasksNotifier extends Notifier<List<Task>> {
         );
     state = [...state, task];
   }
+
+  void delete(String id) {
+    ref.read(taskServiceProvider).deleteTask(id);
+    state = state.where((p) => p.id != id).toList();
+  }
+
+  void update(Task task) {
+    ref.read(taskServiceProvider).updateTask(task);
+    state = state.map((t) => t.id == task.id ? task : t).toList();
+  }
+
+  void completeTask(String taskId) {
+    final updated = ref.read(taskServiceProvider).completeTask(taskId);
+    state = state.map((t) => t.id == taskId ? updated : t).toList();
+  }
+
+  void reopenTask(String taskId) {
+    final updated = ref.read(taskServiceProvider).reopenTask(taskId);
+    state = state.map((t) => t.id == taskId ? updated : t).toList();
+  }
 }
 
 final projectTasksProvider = Provider.autoDispose.family<List<Task>, String>((
