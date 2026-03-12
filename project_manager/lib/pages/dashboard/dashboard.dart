@@ -55,6 +55,7 @@ class _DashboardState extends State<Dashboard> {
                   Section(body: Deadlines(), title: 'Upcoming Deadlines'),
                   SizedBox(height: AppDimens.spacingMedium),
                   Section(body: DueTasks(), title: 'Due Tasks'),
+                  SizedBox(height: AppDimens.spacingLarge),
                 ],
               ),
             ),

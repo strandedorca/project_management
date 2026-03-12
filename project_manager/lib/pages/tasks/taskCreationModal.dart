@@ -145,21 +145,7 @@ class _TaskCreationModalState extends ConsumerState<TaskCreationModal> {
                   ),
                 ),
                 const SizedBox(width: AppDimens.spacingMedium),
-                Expanded(
-                  child: CustomDropdown(
-                    hintText: 'Status',
-                    initialValue: _data.status?.value,
-                    options: statusOptions,
-                    onSelected: (value) {
-                      setState(
-                        () => _data.status = Status.values.firstWhere(
-                          (e) => e.value == value,
-                        ),
-                      );
-                    },
-                    suffixIcon: Icons.check_circle_outlined,
-                  ),
-                ),
+                Expanded(child: SizedBox.shrink()),
               ],
             ),
             const SizedBox(height: AppDimens.spacingMedium),

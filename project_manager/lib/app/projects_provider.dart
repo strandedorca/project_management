@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:project_manager/app/providers.dart';
@@ -56,4 +57,9 @@ final projectOptionsProvider = Provider<List<Option>>((ref) {
       .watch(projectsProvider)
       .map((e) => Option.fromValues(e.id, e.name, Icons.folder_outlined))
       .toList();
+});
+
+final projectNameProvider = Provider.family<String?, String>((ref, projectId) {
+  final projects = ref.watch(projectsProvider);
+  return projects.firstWhereOrNull((p) => p.id == projectId)?.name;
 });

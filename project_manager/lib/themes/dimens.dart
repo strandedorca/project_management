@@ -15,7 +15,7 @@ class AppDimens {
   // Icon Sizes
   static const double iconSmall = 18.0;
   static const double iconMedium = 26.0;
-  static const double iconLarge = 48.0;
+  static const double iconLarge = 40.0;
 
   // Border Radius
   static const double borderRadiusSmall = 8.0;

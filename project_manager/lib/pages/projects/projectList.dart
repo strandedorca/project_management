@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:project_manager/app/projects_provider.dart';
 import 'package:project_manager/components/customAppbar.dart';
-import 'package:project_manager/components/customChip.dart';
-import 'package:project_manager/data/sample_statuses.dart';
 import 'package:project_manager/pages/dashboard/projectCard.dart';
 import 'package:project_manager/pages/projects/fullWidthSwitcher.dart';
 import 'package:project_manager/themes/dimens.dart';
@@ -73,30 +71,6 @@ class _ProjectListState extends ConsumerState<ProjectList> {
               ),
             ),
           ],
-        ),
-      ),
-    );
-  }
-}
-
-class _StatusChips extends StatelessWidget {
-  const _StatusChips();
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      height: 40,
-      child: ListView.builder(
-        scrollDirection: Axis.horizontal,
-        itemCount: defaultStatusNames.length,
-        itemBuilder: (context, index) => Container(
-          margin: EdgeInsets.only(right: AppDimens.spacingSmall),
-          child: CustomChip(
-            name: defaultStatusNames[index],
-            horizontalPadding: AppDimens.paddingMedium,
-            color: Theme.of(context).colorScheme.primary,
-            hasBorder: true,
-          ),
         ),
       ),
     );

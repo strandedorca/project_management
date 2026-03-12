@@ -1,17 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:project_manager/app/providers.dart';
+import 'package:project_manager/components/checkboxWithPriority.dart';
 import 'package:project_manager/components/customChip.dart';
-import 'package:project_manager/data/models/priority_level.dart';
 import 'package:project_manager/data/models/project.dart';
 import 'package:project_manager/pages/projects/projectDetail.dart';
 import 'package:project_manager/themes/dimens.dart';
 import 'package:project_manager/utils/date_formatter.dart';
 import 'package:project_manager/utils/number_formatter.dart';
-
-/// This projectCard is like the projectCard in the project list page,
-/// but with the different position for the name of the project only
-/// TODO: Refactor this to be a reusable widget
 
 class ProjectCard extends ConsumerWidget {
   final Project project;
@@ -67,9 +63,11 @@ class ProjectCard extends ConsumerWidget {
                           percentage: project.weight!,
                           size: 30,
                         )
-                      : _PriorityIndicator(
+                      : CheckboxWithPriority(
                           priority: project.priority,
                           size: 30,
+                          borderWidth: 4,
+                          isChecked: false,
                         ),
                 ],
               ),
@@ -141,25 +139,6 @@ class _ScrollableTags extends StatelessWidget {
           0.95, // fade ends at 0.9
         ],
       ).createShader(rect),
-    );
-  }
-}
-
-class _PriorityIndicator extends StatelessWidget {
-  final PriorityLevel priority;
-  final double size;
-  const _PriorityIndicator({required this.priority, required this.size});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: size,
-      height: size,
-      decoration: BoxDecoration(
-        border: Border.all(color: priority.borderColor, width: 4),
-        color: priority.color.withValues(alpha: 0.2),
-        shape: BoxShape.circle,
-      ),
     );
   }
 }

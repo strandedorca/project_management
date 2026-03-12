@@ -7,6 +7,7 @@ import 'package:project_manager/components/customTextFormField.dart';
 import 'package:project_manager/components/datePickerFormField.dart';
 import 'package:project_manager/components/modalPickerFormField.dart';
 import 'package:project_manager/components/tagPicker.dart';
+import 'package:project_manager/components/taskList.dart';
 import 'package:project_manager/data/models/option.dart';
 import 'package:project_manager/data/models/priority_level.dart';
 import 'package:project_manager/data/models/status.dart';
@@ -84,7 +85,6 @@ class _ProjectDetailFormState extends ConsumerState<ProjectDetailForm> {
             label: 'Name',
             childField: CustomTextFormField(
               initialValue: _data.name,
-              autofocus: true,
               validator: (value) => value != null && value.isEmpty
                   ? 'Project name is required'
                   : null,
@@ -183,7 +183,6 @@ class _ProjectDetailFormState extends ConsumerState<ProjectDetailForm> {
             ],
           ),
           const SizedBox(height: AppDimens.spacingMedium),
-          // TODO: fix this one tomorrow
           ProjectDetailFormField(
             label: 'Tags',
             hasBorder: false,
@@ -198,32 +197,11 @@ class _ProjectDetailFormState extends ConsumerState<ProjectDetailForm> {
             ),
           ),
           const SizedBox(height: AppDimens.spacingMedium),
-          ListView.builder(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            itemCount: tasks.length,
-            itemBuilder: (context, index) {
-              final task = tasks[index];
-              return ListTile(
-                contentPadding: EdgeInsets.zero,
-                title: Text(task.name),
-                leading: Checkbox(
-                  activeColor: Theme.of(context).colorScheme.primary,
-                  checkColor: Theme.of(context).colorScheme.onPrimary,
-                  fillColor: WidgetStateProperty.all(
-                    Theme.of(context).colorScheme.primary,
-                  ),
-                  value: task.status == Status.completed,
-                  onChanged: (value) {
-                    if (task.status == Status.completed) {
-                      ref.read(tasksProvider.notifier).reopenTask(task.id);
-                    } else {
-                      ref.read(tasksProvider.notifier).completeTask(task.id);
-                    }
-                  },
-                ),
-              );
-            },
+          // Task list
+          ProjectDetailFormField(
+            label: 'Tasks',
+            hasBorder: false,
+            childField: TaskList(tasks: tasks),
           ),
         ],
       ),
