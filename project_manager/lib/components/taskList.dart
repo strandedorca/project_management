@@ -51,18 +51,21 @@ class _TaskTile extends ConsumerWidget {
         : null;
     final projectName = ref.watch(projectNameProvider(task.parentId));
 
-    return Container(
-      decoration: hasBottomBorder
-          ? AppDecorations.bottomBorderedBoxDecoration(context)
-          : null,
-      child: Padding(
-        padding: EdgeInsets.all(AppDimens.paddingMedium),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Material(
-              color: Colors.transparent,
-              child: InkWell(
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: () {
+          print('Task ${task.name} tapped');
+        },
+        child: Container(
+          decoration: hasBottomBorder
+              ? AppDecorations.bottomBorderedBoxDecoration(context)
+              : null,
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Checkbox
+              InkWell(
                 overlayColor: WidgetStateProperty.all(Colors.transparent),
                 onTap: () {
                   print('Checkbox tapped');
@@ -72,50 +75,60 @@ class _TaskTile extends ConsumerWidget {
                     ref.read(tasksProvider.notifier).completeTask(task.id);
                   }
                 },
-                child: SizedBox(
-                  width: AppDimens.iconLarge,
-                  height: AppDimens.iconLarge,
-                  child: Align(
-                    alignment: Alignment.topLeft,
-                    child: Padding(
-                      padding: const EdgeInsets.only(top: 2),
-                      child: CheckboxWithPriority(
-                        priority: task.priority,
-                        size: AppDimens.iconSmall + 4,
-                        borderWidth: 2.5,
-                        isChecked: task.status == Status.completed,
-                      ),
-                    ),
+                child: Padding(
+                  padding: EdgeInsets.all(
+                    AppDimens.paddingMedium,
+                  ).copyWith(top: AppDimens.paddingMedium + 2),
+                  child: CheckboxWithPriority(
+                    priority: task.priority,
+                    size: AppDimens.iconCheckboxSize,
+                    borderWidth: 2.5,
+                    isChecked: task.status == Status.completed,
                   ),
                 ),
               ),
-            ),
-            // Task name and project name
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(task.name, overflow: TextOverflow.ellipsis),
-                  const SizedBox(height: 2),
-                  Text(
-                    projectName ?? 'No project',
-                    style: Theme.of(context).textTheme.bodySmall,
+
+              // Task name and project name
+              Expanded(
+                child: Padding(
+                  padding: EdgeInsets.only(
+                    right: AppDimens.paddingMedium,
+                    top: AppDimens.paddingMedium,
+                    bottom: AppDimens.paddingMedium,
                   ),
-                ],
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(task.name, overflow: TextOverflow.ellipsis),
+                            const SizedBox(height: 2),
+                            Text(
+                              projectName ?? 'No project',
+                              style: Theme.of(context).textTheme.bodySmall,
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(width: 16),
+                      // Due date
+                      Text(
+                        displayedDueDate ?? '',
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                          color: displayedDueDate == 'Today'
+                              ? Theme.of(context).colorScheme.outline
+                              : Theme.of(context).colorScheme.error,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
               ),
-            ),
-            const SizedBox(width: 16),
-            // Due date
-            Text(
-              displayedDueDate ?? '',
-              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                color: displayedDueDate == 'Today'
-                    ? Theme.of(context).colorScheme.outline
-                    : Theme.of(context).colorScheme.error,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
