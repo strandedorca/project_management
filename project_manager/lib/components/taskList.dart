@@ -5,6 +5,7 @@ import 'package:project_manager/app/tasks_provider.dart';
 import 'package:project_manager/components/checkboxWithPriority.dart';
 import 'package:project_manager/data/models/status.dart';
 import 'package:project_manager/data/models/task.dart';
+import 'package:project_manager/pages/tasks/taskCreationModal.dart';
 import 'package:project_manager/themes/decorations.dart';
 import 'package:project_manager/themes/dimens.dart';
 import 'package:project_manager/utils/date_formatter.dart';
@@ -15,6 +16,14 @@ class TaskList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final sortedTasks = List<Task>.from(tasks)
+      ..sort((a, b) {
+        if (a.dueDate == null && b.dueDate == null) return 0;
+        if (a.dueDate == null) return 1;
+        if (b.dueDate == null) return -1;
+        return a.dueDate!.compareTo(b.dueDate!);
+      });
+
     return DecoratedBox(
       decoration: AppDecorations.roundedBorderedBox(
         context,
@@ -23,12 +32,12 @@ class TaskList extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          for (final task in tasks)
+          for (final task in sortedTasks)
             Consumer(
               builder: (context, ref, child) {
                 return _TaskTile(
                   task: task,
-                  hasBottomBorder: task != tasks.last,
+                  hasBottomBorder: task != sortedTasks.last,
                 );
               },
             ),
@@ -46,6 +55,9 @@ class _TaskTile extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final dateColor = isTodayOrAfter(task.dueDate)
+        ? Theme.of(context).colorScheme.outline
+        : Theme.of(context).colorScheme.error;
     final displayedDueDate = task.dueDate != null
         ? DateFormatter.shortDateNoYearRelativeToToday(task.dueDate!)
         : null;
@@ -56,6 +68,7 @@ class _TaskTile extends ConsumerWidget {
       child: InkWell(
         onTap: () {
           print('Task ${task.name} tapped');
+          TaskCreationModal.showModal(context, task: task);
         },
         child: Container(
           decoration: hasBottomBorder
@@ -117,9 +130,7 @@ class _TaskTile extends ConsumerWidget {
                       Text(
                         displayedDueDate ?? '',
                         style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: displayedDueDate == 'Today'
-                              ? Theme.of(context).colorScheme.outline
-                              : Theme.of(context).colorScheme.error,
+                          color: dateColor,
                           fontWeight: FontWeight.w500,
                         ),
                       ),
@@ -133,4 +144,14 @@ class _TaskTile extends ConsumerWidget {
       ),
     );
   }
+}
+
+bool isTodayOrAfter(DateTime? date) {
+  if (date == null) return false;
+  final today = DateTime(
+    DateTime.now().year,
+    DateTime.now().month,
+    DateTime.now().day,
+  );
+  return !date.isBefore(today);
 }

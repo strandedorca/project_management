@@ -9,12 +9,16 @@ class ProjectDetailFormField extends StatelessWidget {
     required this.childField,
     this.hasBorder = true,
     this.hasSuffixIcon = false,
+    this.action,
+    this.onActionPressed,
   });
 
   final String? label;
   final Widget childField;
   final bool hasBorder;
   final bool hasSuffixIcon;
+  final Widget? action;
+  final VoidCallback? onActionPressed;
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +27,13 @@ class ProjectDetailFormField extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         if (label != null)
-          Text(label!, style: Theme.of(context).textTheme.titleMedium),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(label!, style: Theme.of(context).textTheme.titleMedium),
+              ?action,
+            ],
+          ),
         const SizedBox(height: AppDimens.spacingMedium),
         Container(
           padding:

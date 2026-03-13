@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:project_manager/app/dependencies.dart';
 import 'package:project_manager/app/tasks_provider.dart';
+import 'package:project_manager/components/button.dart';
 import 'package:project_manager/components/customDropdown.dart';
 import 'package:project_manager/components/customTextFormField.dart';
 import 'package:project_manager/components/datePickerFormField.dart';
@@ -14,6 +15,7 @@ import 'package:project_manager/data/models/status.dart';
 import 'package:project_manager/data/models/tag.dart';
 import 'package:project_manager/pages/projects/projectCreationModel.dart';
 import 'package:project_manager/pages/projects/projectDetailFormField.dart';
+import 'package:project_manager/pages/tasks/taskCreationModal.dart';
 import 'package:project_manager/themes/dimens.dart';
 import 'package:project_manager/utils/date_formatter.dart';
 
@@ -202,6 +204,22 @@ class _ProjectDetailFormState extends ConsumerState<ProjectDetailForm> {
             label: 'Tasks',
             hasBorder: false,
             childField: TaskList(tasks: tasks),
+            action: Button(
+              padding: EdgeInsets.symmetric(
+                vertical: AppDimens.paddingSmall,
+                horizontal: AppDimens.paddingMedium,
+              ),
+              borderRadius: AppDimens.borderRadiusSmall,
+              onPressed: () =>
+                  TaskCreationModal.showModal(context, parentId: _data.id),
+              child: const Row(
+                children: [
+                  Icon(Icons.add, size: AppDimens.iconSmall),
+                  SizedBox(width: AppDimens.spacingSmall),
+                  Text('Add Task'),
+                ],
+              ),
+            ),
           ),
         ],
       ),

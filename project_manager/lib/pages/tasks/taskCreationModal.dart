@@ -11,15 +11,32 @@ import 'package:project_manager/components/modalBottomSheet.dart';
 import 'package:project_manager/components/modalPickerFormField.dart';
 import 'package:project_manager/data/models/option.dart';
 import 'package:project_manager/data/models/priority_level.dart';
-import 'package:project_manager/data/models/status.dart';
+import 'package:project_manager/data/models/task.dart';
 import 'package:project_manager/pages/tasks/taskCreationModel.dart';
 import 'package:project_manager/themes/dimens.dart';
+import 'package:project_manager/utils/date_formatter.dart';
 
 class TaskCreationModal extends ConsumerStatefulWidget {
-  const TaskCreationModal({super.key});
+  const TaskCreationModal({super.key, this.task, this.parentId});
 
-  static void showModal(BuildContext context) {
-    ModelBottomSheet.show(context, title: 'New Task', TaskCreationModal());
+  final Task? task;
+  final String? parentId;
+
+  static void showModal(BuildContext context, {Task? task, String? parentId}) {
+    ModelBottomSheet.show(
+      context,
+      title: task != null ? 'Task Details' : 'New Task',
+      TaskCreationModal(task: task, parentId: parentId),
+      iconData: task != null ? Icons.delete_outline : null,
+      onIconPressed: task != null
+          ? () {
+              ProviderScope.containerOf(
+                context,
+              ).read(tasksProvider.notifier).delete(task.id);
+              Navigator.pop(context);
+            }
+          : null,
+    );
   }
 
   @override
@@ -28,8 +45,22 @@ class TaskCreationModal extends ConsumerStatefulWidget {
 
 class _TaskCreationModalState extends ConsumerState<TaskCreationModal> {
   final _formKey = GlobalKey<FormState>();
-  final _data = TaskCreationModel();
+  late TaskCreationModel _data;
   final _deadlineController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.task != null) {
+      _data = TaskCreationModel.fromTask(widget.task!);
+      if (_data.deadline != null) {
+        _deadlineController.text = DateFormatter.dateOnly(_data.deadline!);
+      }
+    } else {
+      _data = TaskCreationModel();
+      _data.parentId = widget.parentId ?? 'inbox';
+    }
+  }
 
   @override
   void dispose() {
@@ -42,30 +73,32 @@ class _TaskCreationModalState extends ConsumerState<TaskCreationModal> {
     _formKey.currentState!.save();
 
     try {
-      ref
-          .read(tasksProvider.notifier)
-          .add(
-            name: _data.name!,
-            parentId: _data.parentId,
-            description: _data.description,
-            dueDate: _data.deadline,
-            status: _data.status,
-            priority: _data.priority,
-          );
-      print('Task created: ${_data.name}');
+      if (widget.task != null) {
+        ref.read(tasksProvider.notifier).update(_data.toTask(widget.task!.id));
+      } else {
+        ref
+            .read(tasksProvider.notifier)
+            .add(
+              name: _data.name!,
+              parentId: _data.parentId,
+              description: _data.description,
+              dueDate: _data.deadline,
+              status: _data.status,
+              priority: _data.priority,
+            );
+      }
       if (mounted) Navigator.pop(context);
     } catch (e) {
-      print('Failed to create project: $e');
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text('Failed to create project: $e')));
+      print('Failed to create/update task: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Failed to create/update task: $e')),
+      );
     }
   }
 
   @override
   Widget build(BuildContext context) {
     final List<Option> priorityOptions = PriorityLevel.getOptions;
-    final List<Option> statusOptions = Status.getOptions;
     final List<Option> projectOptions = ref.watch(projectOptionsProvider);
 
     return Form(
@@ -77,15 +110,17 @@ class _TaskCreationModalState extends ConsumerState<TaskCreationModal> {
             CustomTextFormField(
               hintText: 'Task Name',
               fontSize: 20.0,
-              autofocus: true,
+              autofocus: widget.task == null,
               onSaved: (value) => _data.name = value ?? '',
               validator: (value) => value != null && value.isEmpty
                   ? 'Task name is required'
                   : null,
+              initialValue: _data.name,
             ),
             CustomTextFormField(
               hintText: 'Description',
               onSaved: (value) => _data.description = value ?? '',
+              initialValue: _data.description,
             ),
             const SizedBox(height: AppDimens.spacingMedium),
             Row(
@@ -149,7 +184,10 @@ class _TaskCreationModalState extends ConsumerState<TaskCreationModal> {
               ],
             ),
             const SizedBox(height: AppDimens.spacingMedium),
-            Button(onPressed: _handleSubmit, child: Text('Create Task')),
+            Button(
+              onPressed: _handleSubmit,
+              child: Text(widget.task != null ? 'Update Task' : 'Create Task'),
+            ),
           ],
         ),
       ),

@@ -7,18 +7,21 @@ class ModelBottomSheet extends StatelessWidget {
     super.key,
     this.title,
     required this.body,
-    this.actionIcon,
+    this.iconData,
+    this.onIconPressed,
   });
 
   final String? title;
   final Widget body;
-  final Widget? actionIcon;
+  final IconData? iconData;
+  final VoidCallback? onIconPressed;
 
   static Future<void> show(
     BuildContext context,
     Widget body, {
-    Widget? actionIcon,
+    IconData? iconData,
     String? title,
+    VoidCallback? onIconPressed,
   }) {
     return showModalBottomSheet(
       context: context,
@@ -34,7 +37,8 @@ class ModelBottomSheet extends StatelessWidget {
         return ModelBottomSheet(
           title: title,
           body: body,
-          actionIcon: actionIcon,
+          iconData: iconData,
+          onIconPressed: onIconPressed,
         );
       },
     );
@@ -47,7 +51,6 @@ class ModelBottomSheet extends StatelessWidget {
         // Header
         if (title != null)
           Container(
-            padding: EdgeInsets.all(AppDimens.appPadding),
             decoration: AppDecorations.bottomBorderedBoxDecoration(
               context,
             ).copyWith(color: Theme.of(context).colorScheme.primary),
@@ -55,16 +58,25 @@ class ModelBottomSheet extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(title!, style: Theme.of(context).textTheme.titleLarge),
-                if (actionIcon != null)
-                  SizedBox(
-                    height: AppDimens.iconSmall,
-                    width: AppDimens.iconMedium,
-                    child: actionIcon!,
+                Padding(
+                  padding: EdgeInsets.all(AppDimens.appPadding),
+                  child: Text(
+                    title!,
+                    style: Theme.of(context).textTheme.titleLarge,
+                  ),
+                ),
+                if (iconData != null)
+                  InkWell(
+                    onTap: onIconPressed,
+                    child: Padding(
+                      padding: EdgeInsets.all(AppDimens.paddingMedium),
+                      child: Icon(iconData!, size: AppDimens.iconMedium),
+                    ),
                   ),
               ],
             ),
           ),
+
         //  Main content
         Expanded(
           child: Container(
